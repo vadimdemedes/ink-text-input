@@ -46,17 +46,14 @@ class TextInput extends Component {
 			return;
 		}
 
-		const chars = value.split('');
-
 		if (key.name === 'backspace') {
-			chars.pop();
+			onChange(value.slice(0, -1));
+			return;
 		}
 
-		if (key.sequence === ch) {
-			chars.push(ch);
+		if (key.name === 'space' || (key.sequence === ch && /^.*$/.test(ch) && !key.ctrl)) {
+			onChange(value + ch);
 		}
-
-		onChange(chars.join(''));
 	}
 }
 
