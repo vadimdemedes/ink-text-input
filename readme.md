@@ -61,6 +61,8 @@ mount(<SearchQuery/>);
 Use this snippet to enable `keypress` events:
 
 ```js
+const readline = require('readline');
+
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 ```
