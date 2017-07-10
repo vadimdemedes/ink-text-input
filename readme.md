@@ -6,7 +6,7 @@
 ## Install
 
 ```
-$ npm install --save ink-text-input
+$ npm install ink-text-input
 ```
 
 
@@ -49,14 +49,14 @@ class SearchQuery extends Component {
 	}
 
 	handleSubmit(value) {
-		// query submitted
+		// Query submitted
 	}
 }
 
 mount(<SearchQuery/>);
 ```
 
-**Note**: For `<TextInput>` to be able to receive `keypress` events, `process.stdin` must be in raw mode. As a result, default behavior like Ctrl+C is disabled, so you must handle that manually.
+**Note**: For `<TextInput>` to be able to receive `keypress` events, `process.stdin` must be in [raw mode](https://nodejs.org/api/tty.html#tty_readstream_setrawmode_mode). As a result, default behavior like Ctrl+C is disabled, so you must handle that manually.
 
 Use this snippet to enable `keypress` events:
 
@@ -82,15 +82,15 @@ Text to display when `value` is empty.
 
 ### onChange
 
-Type: `function`
+Type: `Function`
 
 Function to call when value updates.
 
 ### onSubmit
 
-Type: `function`
+Type: `Function`
 
-Function to call when user presses Enter.
+Function to call when user press <kbd>Enter</kbd>.
 
 
 ## License
