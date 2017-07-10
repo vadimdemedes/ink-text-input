@@ -48,9 +48,6 @@
 		"xo": "^0.18.2"
 	},
 	"babel": {
-		"presets": [
-			"@ava/stage-4"
-		],
 		"plugins": [
 			[
 				"transform-react-jsx",
@@ -63,6 +60,9 @@
 	},
 	"ava": {
 		"babel": {
+			"presets": [
+				"@ava/stage-4"
+			],
 			"plugins": [
 				[
 					"transform-react-jsx",
