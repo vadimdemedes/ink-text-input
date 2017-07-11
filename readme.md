@@ -13,7 +13,7 @@ $ npm install ink-text-input
 ## Usage
 
 ```js
-const {h, Component} = require('ink');
+const {h, mount, Component} = require('ink');
 const TextInput = require('ink-text-input');
 
 class SearchQuery extends Component {
