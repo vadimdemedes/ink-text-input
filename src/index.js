@@ -36,7 +36,7 @@ class TextInput extends Component {
 			return;
 		}
 
-		const {value, onSubmit, onChange} = this.props;
+		const {value, onChange, onSubmit} = this.props;
 
 		if (key.name === 'return') {
 			onSubmit(value);
