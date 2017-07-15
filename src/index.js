@@ -1,6 +1,7 @@
 'use strict';
 
 const {h, Text, Component} = require('ink');
+const PropTypes = require('prop-types');
 const hasAnsi = require('has-ansi');
 
 const noop = () => {};
@@ -12,7 +13,7 @@ class TextInput extends Component {
 		this.handleKeyPress = this.handleKeyPress.bind(this);
 	}
 
-	render({value = '', placeholder}) {
+	render({value, placeholder}) {
 		const hasValue = value.length > 0;
 
 		return (
@@ -35,11 +36,7 @@ class TextInput extends Component {
 			return;
 		}
 
-		const {
-			value,
-			onSubmit = noop,
-			onChange = noop
-		} = this.props;
+		const {value, onSubmit, onChange} = this.props;
 
 		if (key.name === 'return') {
 			onSubmit(value);
@@ -56,5 +53,19 @@ class TextInput extends Component {
 		}
 	}
 }
+
+TextInput.propTypes = {
+	value: PropTypes.string,
+	placeholder: PropTypes.string,
+	onChange: PropTypes.func,
+	onSubmit: PropTypes.func
+};
+
+TextInput.defaultProps = {
+	value: '',
+	placeholder: '',
+	onChange: noop,
+	onSubmit: noop
+};
 
 module.exports = TextInput;

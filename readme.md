@@ -13,7 +13,7 @@ $ npm install ink-text-input
 ## Usage
 
 ```js
-const {h, Component} = require('ink');
+const {h, render, Component} = require('ink');
 const TextInput = require('ink-text-input');
 
 class SearchQuery extends Component {
@@ -53,18 +53,7 @@ class SearchQuery extends Component {
 	}
 }
 
-mount(<SearchQuery/>);
-```
-
-**Note**: For `<TextInput>` to be able to receive `keypress` events, `process.stdin` must be in [raw mode](https://nodejs.org/api/tty.html#tty_readstream_setrawmode_mode). As a result, default behavior like Ctrl+C is disabled, so you must handle that manually.
-
-Use this snippet to enable `keypress` events:
-
-```js
-const readline = require('readline');
-
-readline.emitKeypressEvents(process.stdin);
-process.stdin.setRawMode(true);
+render(<SearchQuery/>);
 ```
 
 

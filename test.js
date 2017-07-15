@@ -1,26 +1,40 @@
+import EventEmitter from 'events';
 import {spy} from 'sinon';
 import test from 'ava';
-import {h, render as build, renderToString, mount, Text} from 'ink';
+import {h, renderToString, render, Text} from 'ink';
 import TextInput from '.';
 
-const render = tree => renderToString(build(tree));
+const createStdin = () => {
+	const stdin = new EventEmitter();
+	stdin.setRawMode = spy();
+	stdin.pause = spy();
+
+	return stdin;
+};
+
+const createStdout = () => ({
+	write: spy()
+});
 
 test('default state', t => {
-	t.is(render(<TextInput/>), '');
+	t.is(renderToString(<TextInput/>), '');
 });
 
 test('display value', t => {
-	t.is(render(<TextInput value="Hello"/>), 'Hello');
+	t.is(renderToString(<TextInput value="Hello"/>), 'Hello');
 });
 
 test('display placeholder', t => {
-	t.is(render(<TextInput placeholder="Placeholder"/>), render(<Text dim>Placeholder</Text>));
+	t.is(renderToString(<TextInput placeholder="Placeholder"/>), renderToString(<Text dim>Placeholder</Text>));
 });
 
 test.serial('attach keypress listener', t => {
 	const setRef = spy();
-	const stream = {write: () => {}};
-	const unmount = mount(<TextInput ref={setRef}/>, stream);
+
+	const stdin = createStdin();
+	const stdout = createStdout();
+
+	const unmount = render(<TextInput ref={setRef}/>, {stdin, stdout});
 	const ref = setRef.firstCall.args[0];
 
 	t.is(process.stdin.listeners('keypress')[0], ref.handleKeyPress);
@@ -30,12 +44,15 @@ test.serial('attach keypress listener', t => {
 	t.deepEqual(process.stdin.listeners('keypress'), []);
 });
 
-test('ignore ansi escapes', t => {
+test.serial('ignore ansi escapes', t => {
 	const setRef = spy();
 	const onChange = spy();
 	const onSubmit = spy();
 
-	render(<TextInput ref={setRef} onChange={onChange} onSubmit={onSubmit}/>);
+	const stdin = createStdin();
+	const stdout = createStdout();
+
+	render(<TextInput ref={setRef} onChange={onChange} onSubmit={onSubmit}/>, {stdin, stdout});
 
 	const ref = setRef.firstCall.args[0];
 	ref.handleKeyPress('', {sequence: '\u001B[H'});
@@ -44,12 +61,15 @@ test('ignore ansi escapes', t => {
 	t.false(onSubmit.called);
 });
 
-test('handle return', t => {
+test.serial('handle return', t => {
 	const setRef = spy();
 	const onChange = spy();
 	const onSubmit = spy();
 
-	render(<TextInput ref={setRef} value="Test" onChange={onChange} onSubmit={onSubmit}/>);
+	const stdin = createStdin();
+	const stdout = createStdout();
+
+	render(<TextInput ref={setRef} value="Test" onChange={onChange} onSubmit={onSubmit}/>, {stdin, stdout});
 
 	const ref = setRef.firstCall.args[0];
 	ref.handleKeyPress('', {name: 'return'});
@@ -59,12 +79,15 @@ test('handle return', t => {
 	t.deepEqual(onSubmit.firstCall.args, ['Test']);
 });
 
-test('handle change', t => {
+test.serial('handle change', t => {
 	const setRef = spy();
 	const onChange = spy();
 	const onSubmit = spy();
 
-	render(<TextInput ref={setRef} value="A" onChange={onChange} onSubmit={onSubmit}/>);
+	const stdin = createStdin();
+	const stdout = createStdout();
+
+	render(<TextInput ref={setRef} value="A" onChange={onChange} onSubmit={onSubmit}/>, {stdin, stdout});
 
 	const ref = setRef.firstCall.args[0];
 	ref.handleKeyPress('B', {sequence: 'B'});

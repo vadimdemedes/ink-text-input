@@ -35,7 +35,8 @@
 		"query"
 	],
 	"dependencies": {
-		"has-ansi": "^3.0.0"
+		"has-ansi": "^3.0.0",
+		"prop-types": "^15.5.10"
 	},
 	"devDependencies": {
 		"ava": "^0.20.0",
@@ -43,7 +44,7 @@
 		"babel-plugin-transform-react-jsx": "^6.24.1",
 		"eslint-config-xo-react": "^0.13.0",
 		"eslint-plugin-react": "^7.1.0",
-		"ink": "^0.1.2",
+		"ink": "^0.2.1",
 		"sinon": "^2.3.6",
 		"xo": "^0.18.2"
 	},
@@ -79,7 +80,7 @@
 			"xo-react"
 		],
 		"rules": {
-			"react/prop-types": 0
+			"react/no-unused-prop-types": 1
 		},
 		"settings": {
 			"react": {
