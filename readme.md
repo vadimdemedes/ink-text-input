@@ -56,6 +56,8 @@ class SearchQuery extends Component {
 render(<SearchQuery/>);
 ```
 
+<img src="media/demo.gif" width="556">
+
 
 ## Props
 
