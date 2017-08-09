@@ -3,12 +3,20 @@
 const {h, Text, Component} = require('ink');
 const PropTypes = require('prop-types');
 const hasAnsi = require('has-ansi');
+const readline = require('readline');
 
 const noop = () => {};
 
 class TextInput extends Component {
 	constructor(props) {
 		super(props);
+
+		if (props.line) {
+			this.rl = readline.createInterface({
+				input: process.stdin,
+				output: process.stdout
+			});
+		}
 
 		this.handleKeyPress = this.handleKeyPress.bind(this);
 	}
@@ -24,11 +32,19 @@ class TextInput extends Component {
 	}
 
 	componentDidMount() {
-		process.stdin.on('keypress', this.handleKeyPress);
+		if (this.rl) {
+			this.rl.on('line', this.props.onSubmit);
+		} else {
+			process.stdin.on('keypress', this.handleKeyPress);
+		}
 	}
 
 	componentWillUnmount() {
-		process.stdin.removeListener('keypress', this.handleKeyPress);
+		if (this.rl) {
+			this.rl.removeListener('line', this.props.onSubmit);
+		} else {
+			process.stdin.removeListener('keypress', this.handleKeyPress);
+		}
 	}
 
 	handleKeyPress(ch, key) {
@@ -55,6 +71,7 @@ class TextInput extends Component {
 }
 
 TextInput.propTypes = {
+	line: propTypes.bool,
 	value: PropTypes.string,
 	placeholder: PropTypes.string,
 	onChange: PropTypes.func,
@@ -62,6 +79,7 @@ TextInput.propTypes = {
 };
 
 TextInput.defaultProps = {
+	line: false,
 	value: '',
 	placeholder: '',
 	onChange: noop,
