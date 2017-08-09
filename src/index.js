@@ -1,9 +1,9 @@
 'use strict';
 
+const readline = require('readline');
 const {h, Text, Component} = require('ink');
 const PropTypes = require('prop-types');
 const hasAnsi = require('has-ansi');
-const readline = require('readline');
 
 const noop = () => {};
 
@@ -71,7 +71,7 @@ class TextInput extends Component {
 }
 
 TextInput.propTypes = {
-	line: propTypes.bool,
+	line: PropTypes.bool,
 	value: PropTypes.string,
 	placeholder: PropTypes.string,
 	onChange: PropTypes.func,
