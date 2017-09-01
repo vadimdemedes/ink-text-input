@@ -32,6 +32,10 @@ class TextInput extends Component {
 	}
 
 	handleKeyPress(ch, key) {
+		if (!this.props.focus) {
+			return;
+		}
+
 		if (hasAnsi(key.sequence)) {
 			return;
 		}
@@ -58,14 +62,16 @@ TextInput.propTypes = {
 	value: PropTypes.string,
 	placeholder: PropTypes.string,
 	onChange: PropTypes.func,
-	onSubmit: PropTypes.func
+	onSubmit: PropTypes.func,
+	focus: PropTypes.bool
 };
 
 TextInput.defaultProps = {
 	value: '',
 	placeholder: '',
 	onChange: noop,
-	onSubmit: noop
+	onSubmit: noop,
+	focus: true
 };
 
 module.exports = TextInput;

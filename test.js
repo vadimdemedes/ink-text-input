@@ -36,7 +36,7 @@ test.serial('attach keypress listener', t => {
 	t.deepEqual(process.stdin.listeners('keypress'), []);
 });
 
-test.failing('ignore input on blurred', t => {
+test('ignore input on blurred', t => {
 	const setRef = spy();
 	const onChange = spy();
 	const onSubmit = spy();
