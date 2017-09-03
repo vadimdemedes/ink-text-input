@@ -36,6 +36,21 @@ test.serial('attach keypress listener', t => {
 	t.deepEqual(process.stdin.listeners('keypress'), []);
 });
 
+test('ignore input on blurred', t => {
+	const setRef = spy();
+	const onChange = spy();
+	const onSubmit = spy();
+
+	build(<TextInput ref={setRef} focus={false} onChange={onChange} onSubmit={onSubmit}/>);
+	const ref = setRef.firstCall.args[0];
+
+	ref.handleKeyPress('', {name: 'return'});
+	ref.handleKeyPress('B', {sequence: 'B'});
+
+	t.false(onChange.called);
+	t.false(onSubmit.called);
+});
+
 test('ignore ansi escapes', t => {
 	const setRef = spy();
 	const onChange = spy();
