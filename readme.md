@@ -61,6 +61,13 @@ render(<SearchQuery/>);
 
 ## Props
 
+### type
+
+Type: `string`
+Options: `['text', 'number']`
+
+Type of input to accept.
+
 ### value
 
 Type: `string`
