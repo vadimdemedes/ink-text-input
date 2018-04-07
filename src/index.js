@@ -6,6 +6,17 @@ const hasAnsi = require('has-ansi');
 
 const noop = () => {};
 
+const isValid = (value, type) => {
+	switch (type) {
+		case 'number':
+			return /^[1-9](?:[0-9]*)$/.test(String(value));
+		case 'text':
+			return value && value.length > 0;
+		default:
+			return true;
+	}
+};
+
 class TextInput extends Component {
 	constructor(props) {
 		super(props);
@@ -13,8 +24,9 @@ class TextInput extends Component {
 		this.handleKeyPress = this.handleKeyPress.bind(this);
 	}
 
-	render({value, placeholder}) {
-		const hasValue = value.length > 0;
+	render() {
+		const {value, type, placeholder} = this.props;
+		const hasValue = isValid(value, type);
 
 		return (
 			<Text dim={!hasValue}>
@@ -40,7 +52,7 @@ class TextInput extends Component {
 			return;
 		}
 
-		const {value, onChange, onSubmit} = this.props;
+		const {value, type, onChange, onSubmit} = this.props;
 
 		if (key.name === 'return') {
 			onSubmit(value);
@@ -53,25 +65,36 @@ class TextInput extends Component {
 		}
 
 		if (key.name === 'space' || (key.sequence === ch && /^.*$/.test(ch) && !key.ctrl)) {
-			onChange(value + ch);
+			const newValue = String(value) + ch;
+			if (isValid(newValue, type)) {
+				onChange(newValue);
+			}
 		}
 	}
 }
 
 TextInput.propTypes = {
-	value: PropTypes.string,
-	placeholder: PropTypes.string,
+	value: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.number
+	]),
+	placeholder: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.number
+	]),
 	onChange: PropTypes.func,
 	onSubmit: PropTypes.func,
-	focus: PropTypes.bool
+	focus: PropTypes.bool,
+	type: PropTypes.oneOf(['text', 'number'])
 };
 
 TextInput.defaultProps = {
-	value: '',
+	value: undefined,
 	placeholder: '',
 	onChange: noop,
 	onSubmit: noop,
-	focus: true
+	focus: true,
+	type: 'text'
 };
 
 module.exports = TextInput;

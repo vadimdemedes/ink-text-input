@@ -12,6 +12,14 @@ test('display value', t => {
 	t.is(renderToString(<TextInput value="Hello"/>), 'Hello');
 });
 
+test('display number value', t => {
+	t.is(renderToString(<TextInput type="number" value="1234"/>), '1234');
+});
+
+test('display invalid number value', t => {
+	t.is(renderToString(<TextInput type="number" value="Hello"/>), '');
+});
+
 test('display placeholder', t => {
 	t.is(renderToString(<TextInput placeholder="Placeholder"/>), renderToString(<Text dim>Placeholder</Text>));
 });
@@ -92,5 +100,19 @@ test('handle change', t => {
 
 	t.true(onChange.calledOnce);
 	t.deepEqual(onChange.firstCall.args, ['AB']);
+	t.false(onSubmit.called);
+});
+
+test('handle invalid change', t => {
+	const setRef = spy();
+	const onChange = spy();
+	const onSubmit = spy();
+
+	build(<TextInput ref={setRef} type="number" value={1} onChange={onChange} onSubmit={onSubmit}/>);
+
+	const ref = setRef.firstCall.args[0];
+	ref.handleKeyPress('B', {sequence: 'B'});
+
+	t.false(onChange.called);
 	t.false(onSubmit.called);
 });
