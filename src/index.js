@@ -1,6 +1,6 @@
 'use strict';
 
-const {h, Text, Component} = require('ink');
+const {h, Color, Component} = require('ink');
 const PropTypes = require('prop-types');
 const hasAnsi = require('has-ansi');
 
@@ -17,9 +17,9 @@ class TextInput extends Component {
 		const hasValue = value.length > 0;
 
 		return (
-			<Text dim={!hasValue}>
+			<Color dim={!hasValue}>
 				{hasValue ? value : placeholder}
-			</Text>
+			</Color>
 		);
 	}
 
