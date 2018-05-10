@@ -1,7 +1,7 @@
 import EventEmitter from 'events';
 import {spy} from 'sinon';
 import test from 'ava';
-import {h, build, renderToString, render, Text} from 'ink';
+import {h, build, renderToString, render, Color} from 'ink';
 import TextInput from '.';
 
 test('default state', t => {
@@ -13,7 +13,7 @@ test('display value', t => {
 });
 
 test('display placeholder', t => {
-	t.is(renderToString(<TextInput placeholder="Placeholder"/>), renderToString(<Text dim>Placeholder</Text>));
+	t.is(renderToString(<TextInput placeholder="Placeholder"/>), renderToString(<Color dim>Placeholder</Color>));
 });
 
 test.serial('attach keypress listener', t => {
