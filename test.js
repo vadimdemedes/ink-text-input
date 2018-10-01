@@ -1,96 +1,71 @@
 import EventEmitter from 'events';
+import React from 'react';
 import {spy} from 'sinon';
 import test from 'ava';
-import {h, build, renderToString, render, Color} from 'ink';
+import {render, Color} from 'ink';
 import TextInput from '.';
 
+const noop = () => {};
+
+const createStdin = () => {
+	const stream = new EventEmitter();
+	stream.setRawMode = spy();
+
+	return stream;
+};
+
+const renderToString = (node, stdin = createStdin()) => {
+	let output = '';
+
+	const stream = {
+		columns: 100,
+		write: data => {
+			output += data;
+		}
+	};
+
+	render(node, {
+		debug: true,
+		stdout: stream,
+		stdin
+	});
+
+	return output;
+};
+
 test('default state', t => {
-	t.is(renderToString(<TextInput/>), '');
+	t.is(renderToString(<TextInput value="" onChange={noop}/>), '');
 });
 
 test('display value', t => {
-	t.is(renderToString(<TextInput value="Hello"/>), 'Hello');
+	t.is(renderToString(<TextInput value="Hello" showCursor={false} onChange={noop}/>), 'Hello\n');
 });
 
 test('display placeholder', t => {
-	t.is(renderToString(<TextInput placeholder="Placeholder"/>), renderToString(<Color dim>Placeholder</Color>));
+	t.is(renderToString(<TextInput value="" placeholder="Placeholder" onChange={noop}/>), renderToString(<Color dim>Placeholder</Color>));
 });
 
-test.serial('attach keypress listener', t => {
-	const stdin = new EventEmitter();
-	stdin.setRawMode = spy();
-	stdin.pause = spy();
+test('display value with mask', t => {
+	t.is(renderToString(<TextInput value="Hello" showCursor={false} mask="*" onChange={noop}/>), '*****\n');
+});
 
-	const stdout = {
-		write: spy()
-	};
+test('accept input', t => {
+	const stdin = createStdin();
+	const ref = React.createRef();
+	const onChange = spy();
+	renderToString(<TextInput ref={ref} value="" onChange={onChange}/>, stdin);
 
-	const setRef = spy();
-	const unmount = render(<TextInput ref={setRef}/>, {stdin, stdout});
-	const ref = setRef.firstCall.args[0];
-
-	t.is(process.stdin.listeners('keypress')[0], ref.handleKeyPress);
-
-	unmount();
-
-	t.deepEqual(process.stdin.listeners('keypress'), []);
+	stdin.emit('data', 'X');
+	t.true(onChange.calledOnce);
+	t.is(onChange.firstCall.args[0], 'X');
 });
 
 test('ignore input on blurred', t => {
-	const setRef = spy();
+	const stdin = createStdin();
+	const ref = React.createRef();
 	const onChange = spy();
-	const onSubmit = spy();
+	renderToString(<TextInput ref={ref} focus={false} value="" onChange={onChange}/>, stdin);
 
-	build(<TextInput ref={setRef} focus={false} onChange={onChange} onSubmit={onSubmit}/>);
-	const ref = setRef.firstCall.args[0];
-
-	ref.handleKeyPress('', {name: 'return'});
-	ref.handleKeyPress('B', {sequence: 'B'});
-
+	stdin.emit('data', 'X');
 	t.false(onChange.called);
-	t.false(onSubmit.called);
-});
-
-test('ignore ansi escapes', t => {
-	const setRef = spy();
-	const onChange = spy();
-	const onSubmit = spy();
-
-	build(<TextInput ref={setRef} onChange={onChange} onSubmit={onSubmit}/>);
-
-	const ref = setRef.firstCall.args[0];
-	ref.handleKeyPress('', {sequence: '\u001B[H'});
-
-	t.false(onChange.called);
-	t.false(onSubmit.called);
-});
-
-test('handle return', t => {
-	const setRef = spy();
-	const onChange = spy();
-	const onSubmit = spy();
-
-	build(<TextInput ref={setRef} value="Test" onChange={onChange} onSubmit={onSubmit}/>);
-
-	const ref = setRef.firstCall.args[0];
-	ref.handleKeyPress('', {name: 'return'});
-
-	t.false(onChange.called);
-	t.true(onSubmit.calledOnce);
-	t.deepEqual(onSubmit.firstCall.args, ['Test']);
-});
-
-test('handle change', t => {
-	const setRef = spy();
-	const onChange = spy();
-	const onSubmit = spy();
-
-	build(<TextInput ref={setRef} value="A" onChange={onChange} onSubmit={onSubmit}/>);
-
-	const ref = setRef.firstCall.args[0];
-	ref.handleKeyPress('B', {sequence: 'B'});
-
-	t.true(onChange.calledOnce);
-	t.deepEqual(onChange.firstCall.args, ['AB']);
-	t.false(onSubmit.called);
 });
