@@ -14,7 +14,7 @@
 		"node": ">=8"
 	},
 	"scripts": {
-		"test": "xo && ava",
+		"test": "xo && FORCE_COLOR=1 ava",
 		"build": "babel src --out-dir=build",
 		"prepublishOnly": "npm run build",
 		"pretest": "npm run build"
@@ -35,45 +35,31 @@
 		"query"
 	],
 	"dependencies": {
-		"chalk": "^2.4.1",
 		"prop-types": "^15.5.10"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.1.2",
 		"@babel/core": "^7.1.2",
 		"@babel/plugin-proposal-class-properties": "^7.1.0",
-		"@babel/plugin-transform-modules-commonjs": "^7.1.0",
 		"@babel/preset-react": "^7.0.0",
-		"ava": "^1.0.0-beta.8",
+		"ava": "*",
 		"babel-eslint": "^10.0.1",
+		"chalk": "^2.4.2",
 		"eslint-config-xo-react": "^0.17.0",
 		"eslint-plugin-react": "^7.11.1",
-		"ink": "^2.0.0-0",
+		"ink": "^2.0.0-15",
 		"react": "^16.5.2",
 		"sinon": "^2.3.6",
-		"xo": "^0.23.0"
+		"xo": "*"
 	},
 	"babel": {
 		"plugins": [
-			"@babel/plugin-proposal-class-properties",
-			"@babel/plugin-transform-modules-commonjs"
+			"@babel/plugin-proposal-class-properties"
 		],
 		"presets": [
+			"@ava/stage-4",
 			"@babel/preset-react"
 		]
-	},
-	"ava": {
-		"babel": {
-			"testOptions": {
-				"plugins": [
-					"@babel/plugin-proposal-class-properties",
-					"@babel/plugin-transform-modules-commonjs"
-				],
-				"presets": [
-					"@babel/preset-react"
-				]
-			}
-		}
 	},
 	"xo": {
 		"parser": "babel-eslint",
