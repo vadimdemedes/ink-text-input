@@ -17,7 +17,7 @@
 		"pretest": "npm run build",
 		"test": "xo && ava",
 		"build": "babel src --out-dir=dist",
-		"prepublish": "npm run build"
+		"prepare": "npm run build"
 	},
 	"files": [
 		"dist"
