@@ -1,96 +1,96 @@
 import EventEmitter from 'events';
+import React, {useState} from 'react';
 import {spy} from 'sinon';
 import test from 'ava';
-import {h, build, renderToString, render, Color} from 'ink';
+import chalk from 'chalk';
+import {render} from 'ink';
 import TextInput from '.';
 
+const noop = () => {};
+
+const createInkOptions = () => {
+	const stdin = new EventEmitter();
+	stdin.setRawMode = () => {};
+	stdin.setEncoding = () => {};
+
+	const options = {
+		stdin,
+		stdout: {
+			columns: 100,
+			write: spy()
+		},
+		debug: true
+	};
+
+	return options;
+};
+
+const CURSOR = chalk.inverse(' ');
+
 test('default state', t => {
-	t.is(renderToString(<TextInput/>), '');
+	const options = createInkOptions();
+	render(<TextInput value="" onChange={noop}/>, options);
+
+	const output = options.stdout.write.lastCall.args[0];
+	t.is(output, CURSOR);
 });
 
 test('display value', t => {
-	t.is(renderToString(<TextInput value="Hello"/>), 'Hello');
+	const options = createInkOptions();
+	render(<TextInput value="Hello" showCursor={false} onChange={noop}/>, options);
+
+	const output = options.stdout.write.lastCall.args[0];
+	t.is(output, 'Hello');
 });
 
 test('display placeholder', t => {
-	t.is(renderToString(<TextInput placeholder="Placeholder"/>), renderToString(<Color dim>Placeholder</Color>));
+	const options = createInkOptions();
+	render(<TextInput value="" placeholder="Placeholder" onChange={noop}/>, options);
+
+	const output = options.stdout.write.lastCall.args[0];
+	t.is(output, chalk.dim('Placeholder'));
 });
 
-test.serial('attach keypress listener', t => {
-	const stdin = new EventEmitter();
-	stdin.setRawMode = spy();
-	stdin.pause = spy();
+test('display value with mask', t => {
+	const options = createInkOptions();
+	render(<TextInput value="Hello" showCursor={false} mask="*" onChange={noop}/>, options);
 
-	const stdout = {
-		write: spy()
+	const output = options.stdout.write.lastCall.args[0];
+	t.is(output, '*****');
+});
+
+test('accept input', t => {
+	const options = createInkOptions();
+
+	const StatefulTextInput = () => {
+		const [value, setValue] = useState('');
+
+		return <TextInput value={value} onChange={setValue}/>;
 	};
 
-	const setRef = spy();
-	const unmount = render(<TextInput ref={setRef}/>, {stdin, stdout});
-	const ref = setRef.firstCall.args[0];
+	render(<StatefulTextInput/>, options);
 
-	t.is(process.stdin.listeners('keypress')[0], ref.handleKeyPress);
+	t.is(options.stdout.write.lastCall.args[0], CURSOR);
 
-	unmount();
+	options.stdin.emit('data', 'X');
 
-	t.deepEqual(process.stdin.listeners('keypress'), []);
+	t.is(options.stdout.write.lastCall.args[0], `X${CURSOR}`);
 });
 
-test('ignore input on blurred', t => {
-	const setRef = spy();
-	const onChange = spy();
-	const onSubmit = spy();
+test('ignore input when not in focus', t => {
+	const options = createInkOptions();
 
-	build(<TextInput ref={setRef} focus={false} onChange={onChange} onSubmit={onSubmit}/>);
-	const ref = setRef.firstCall.args[0];
+	const StatefulTextInput = () => {
+		const [value, setValue] = useState('');
 
-	ref.handleKeyPress('', {name: 'return'});
-	ref.handleKeyPress('B', {sequence: 'B'});
+		return <TextInput focus={false} value={value} onChange={setValue}/>;
+	};
 
-	t.false(onChange.called);
-	t.false(onSubmit.called);
-});
+	render(<StatefulTextInput/>, options);
 
-test('ignore ansi escapes', t => {
-	const setRef = spy();
-	const onChange = spy();
-	const onSubmit = spy();
+	t.is(options.stdout.write.lastCall.args[0], '');
 
-	build(<TextInput ref={setRef} onChange={onChange} onSubmit={onSubmit}/>);
+	options.stdin.emit('data', 'X');
 
-	const ref = setRef.firstCall.args[0];
-	ref.handleKeyPress('', {sequence: '\u001B[H'});
-
-	t.false(onChange.called);
-	t.false(onSubmit.called);
-});
-
-test('handle return', t => {
-	const setRef = spy();
-	const onChange = spy();
-	const onSubmit = spy();
-
-	build(<TextInput ref={setRef} value="Test" onChange={onChange} onSubmit={onSubmit}/>);
-
-	const ref = setRef.firstCall.args[0];
-	ref.handleKeyPress('', {name: 'return'});
-
-	t.false(onChange.called);
-	t.true(onSubmit.calledOnce);
-	t.deepEqual(onSubmit.firstCall.args, ['Test']);
-});
-
-test('handle change', t => {
-	const setRef = spy();
-	const onChange = spy();
-	const onSubmit = spy();
-
-	build(<TextInput ref={setRef} value="A" onChange={onChange} onSubmit={onSubmit}/>);
-
-	const ref = setRef.firstCall.args[0];
-	ref.handleKeyPress('B', {sequence: 'B'});
-
-	t.true(onChange.calledOnce);
-	t.deepEqual(onChange.firstCall.args, ['AB']);
-	t.false(onSubmit.called);
+	t.true(options.stdout.write.calledOnce);
 });

@@ -12,11 +12,12 @@ $ npm install ink-text-input
 
 ## Usage
 
-```js
-const {h, render, Component} = require('ink');
-const TextInput = require('ink-text-input');
+```jsx
+import React from 'react';
+import {render} from 'ink';
+import TextInput from 'ink-text-input';
 
-class SearchQuery extends Component {
+class SearchQuery extends React.Component {
 	constructor() {
 		super();
 
@@ -28,28 +29,23 @@ class SearchQuery extends Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
-	render(props, state) {
+	render() {
 		return (
-			<div>
-				Enter your query:
+			<Box>
+				<Box marginRight={1}>
+					Enter your query:
+				</Box>
 
 				<TextInput
-					value={state.query}
+					value={this.state.query}
 					onChange={this.handleChange}
-					onSubmit={this.handleSubmit}
 				/>
-			</div>
+			</Box>
 		);
 	}
 
-	handleChange(value) {
-		this.setState({
-			query: value
-		});
-	}
-
-	handleSubmit(value) {
-		// Query submitted
+	handleChange(query) {
+		this.setState({query});
 	}
 }
 
@@ -73,17 +69,32 @@ Type: `string`
 
 Text to display when `value` is empty.
 
+### showCursor
+
+Type: `boolean`<br>
+Default: `false`
+
+Whether to show cursor and allow navigation inside text input with arrow keys.
+
+### mask
+
+Type: `string`
+
+Replace all chars and mask the value. Useful for password inputs.
+
+```jsx
+<TextInput
+	value="Hello"
+	mask="*"
+/>
+//=> "*****"
+```
+
 ### onChange
 
 Type: `Function`
 
 Function to call when value updates.
-
-### onSubmit
-
-Type: `Function`
-
-Function to call when user press <kbd>Enter</kbd>.
 
 
 ## License
