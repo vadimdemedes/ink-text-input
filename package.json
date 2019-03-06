@@ -48,8 +48,8 @@
 		"eslint-config-xo-react": "^0.17.0",
 		"eslint-plugin-react": "^7.11.1",
 		"ink": "^2.0.0",
+		"ink-testing-library": "^1.0.0",
 		"react": "^16.5.2",
-		"sinon": "^2.3.6",
 		"xo": "*"
 	},
 	"babel": {

@@ -1,96 +1,65 @@
-import EventEmitter from 'events';
 import React, {useState} from 'react';
-import {spy} from 'sinon';
 import test from 'ava';
 import chalk from 'chalk';
-import {render} from 'ink';
+import {render} from 'ink-testing-library';
 import TextInput from '.';
 
 const noop = () => {};
 
-const createInkOptions = () => {
-	const stdin = new EventEmitter();
-	stdin.setRawMode = () => {};
-	stdin.setEncoding = () => {};
-
-	const options = {
-		stdin,
-		stdout: {
-			columns: 100,
-			write: spy()
-		},
-		debug: true
-	};
-
-	return options;
-};
-
 const CURSOR = chalk.inverse(' ');
 
 test('default state', t => {
-	const options = createInkOptions();
-	render(<TextInput value="" onChange={noop}/>, options);
+	const {lastFrame} = render(<TextInput value="" onChange={noop}/>);
 
-	const output = options.stdout.write.lastCall.args[0];
-	t.is(output, CURSOR);
+	t.is(lastFrame(), CURSOR);
 });
 
 test('display value', t => {
-	const options = createInkOptions();
-	render(<TextInput value="Hello" showCursor={false} onChange={noop}/>, options);
+	const {lastFrame} = render(<TextInput value="Hello" showCursor={false} onChange={noop}/>);
 
-	const output = options.stdout.write.lastCall.args[0];
-	t.is(output, 'Hello');
+	t.is(lastFrame(), 'Hello');
 });
 
 test('display placeholder', t => {
-	const options = createInkOptions();
-	render(<TextInput value="" placeholder="Placeholder" onChange={noop}/>, options);
+	const {lastFrame} = render(<TextInput value="" placeholder="Placeholder" onChange={noop}/>);
 
-	const output = options.stdout.write.lastCall.args[0];
-	t.is(output, chalk.dim('Placeholder'));
+	t.is(lastFrame(), chalk.dim('Placeholder'));
 });
 
 test('display value with mask', t => {
-	const options = createInkOptions();
-	render(<TextInput value="Hello" showCursor={false} mask="*" onChange={noop}/>, options);
+	const {lastFrame} = render(<TextInput value="Hello" showCursor={false} mask="*" onChange={noop}/>);
 
-	const output = options.stdout.write.lastCall.args[0];
-	t.is(output, '*****');
+	t.is(lastFrame(), '*****');
 });
 
 test('accept input', t => {
-	const options = createInkOptions();
-
 	const StatefulTextInput = () => {
 		const [value, setValue] = useState('');
 
 		return <TextInput value={value} onChange={setValue}/>;
 	};
 
-	render(<StatefulTextInput/>, options);
+	const {stdin, lastFrame} = render(<StatefulTextInput/>);
 
-	t.is(options.stdout.write.lastCall.args[0], CURSOR);
+	t.is(lastFrame(), CURSOR);
 
-	options.stdin.emit('data', 'X');
+	stdin.write('X');
 
-	t.is(options.stdout.write.lastCall.args[0], `X${CURSOR}`);
+	t.is(lastFrame(), `X${CURSOR}`);
 });
 
 test('ignore input when not in focus', t => {
-	const options = createInkOptions();
-
 	const StatefulTextInput = () => {
 		const [value, setValue] = useState('');
 
 		return <TextInput focus={false} value={value} onChange={setValue}/>;
 	};
 
-	render(<StatefulTextInput/>, options);
+	const {stdin, frames, lastFrame} = render(<StatefulTextInput/>);
 
-	t.is(options.stdout.write.lastCall.args[0], '');
+	t.is(lastFrame(), '');
 
-	options.stdin.emit('data', 'X');
+	stdin.write('X');
 
-	t.true(options.stdout.write.calledOnce);
+	t.is(frames.length, 1);
 });
