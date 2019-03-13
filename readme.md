@@ -14,7 +14,7 @@ $ npm install ink-text-input
 
 ```jsx
 import React from 'react';
-import {render} from 'ink';
+import {render, Box} from 'ink';
 import TextInput from 'ink-text-input';
 
 class SearchQuery extends React.Component {
@@ -26,7 +26,6 @@ class SearchQuery extends React.Component {
 		};
 
 		this.handleChange = this.handleChange.bind(this);
-		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
 	render() {
