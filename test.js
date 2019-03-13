@@ -7,6 +7,7 @@ import TextInput from '.';
 const noop = () => {};
 
 const CURSOR = chalk.inverse(' ');
+const ENTER = '\r';
 
 test('default state', t => {
 	const {lastFrame} = render(<TextInput value="" onChange={noop}/>);
@@ -62,4 +63,26 @@ test('ignore input when not in focus', t => {
 	stdin.write('X');
 
 	t.is(frames.length, 1);
+});
+
+test.cb('onSubmit', t => {
+	const StatefulTextInput = () => {
+		const [value, setValue] = useState('');
+
+		return (
+			<TextInput value={value} onChange={setValue} onSubmit={value => {
+				t.is(value, 'X');
+				t.end();
+			}}/>
+		);
+	};
+
+	const {stdin, lastFrame} = render(<StatefulTextInput/>);
+
+	t.is(lastFrame(), CURSOR);
+
+	stdin.write('X');
+	stdin.write(ENTER);
+
+	t.is(lastFrame(), `X${CURSOR}`);
 });
