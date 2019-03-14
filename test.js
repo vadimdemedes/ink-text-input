@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import test from 'ava';
 import chalk from 'chalk';
 import {render} from 'ink-testing-library';
+import sinon from 'sinon';
 import TextInput from '.';
 
 const noop = () => {};
@@ -65,15 +66,14 @@ test('ignore input when not in focus', t => {
 	t.is(frames.length, 1);
 });
 
-test.cb('onSubmit', t => {
+test('onSubmit', t => {
+	const onSubmit = sinon.spy();
+
 	const StatefulTextInput = () => {
 		const [value, setValue] = useState('');
 
 		return (
-			<TextInput value={value} onChange={setValue} onSubmit={value => {
-				t.is(value, 'X');
-				t.end();
-			}}/>
+			<TextInput value={value} onChange={setValue} onSubmit={onSubmit}/>
 		);
 	};
 
@@ -85,4 +85,6 @@ test.cb('onSubmit', t => {
 	stdin.write(ENTER);
 
 	t.is(lastFrame(), `X${CURSOR}`);
+	t.true(onSubmit.calledWith('X'));
+	t.true(onSubmit.calledOnce);
 });
