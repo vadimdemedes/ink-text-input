@@ -9,6 +9,8 @@ const ARROW_LEFT = '\u001B[D';
 const ARROW_RIGHT = '\u001B[C';
 const ENTER = '\r';
 const CTRL_C = '\x03';
+const BACKSPACE = '\x08';
+const DELETE = '\x7F';
 
 class TextInput extends PureComponent {
 	static propTypes = {
@@ -107,7 +109,7 @@ class TextInput extends PureComponent {
 			if (showCursor && !mask) {
 				cursorOffset++;
 			}
-		} else if (s === '\x08' || s === '\x7F') {
+		} else if (s === BACKSPACE || s === DELETE) {
 			value = value.substr(0, cursorOffset - 1) + value.substr(cursorOffset, value.length);
 			cursorOffset--;
 		} else {
