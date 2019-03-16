@@ -22,6 +22,12 @@ test('display value', t => {
 	t.is(lastFrame(), 'Hello');
 });
 
+test('display value with cursor', t => {
+	const {lastFrame} = render(<TextInput value="Hello" onChange={noop}/>);
+
+	t.is(lastFrame(), `Hello${CURSOR}`);
+});
+
 test('display placeholder', t => {
 	const {lastFrame} = render(<TextInput value="" placeholder="Placeholder" onChange={noop}/>);
 
