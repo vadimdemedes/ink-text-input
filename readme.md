@@ -95,6 +95,12 @@ Type: `Function`
 
 Function to call when value updates.
 
+### onSubmit
+
+Type: `Function`
+
+Function to call when `Enter` is pressed.
+
 
 ## License
 
