@@ -21,14 +21,16 @@ class TextInput extends PureComponent {
 		showCursor: PropTypes.bool,
 		stdin: PropTypes.object.isRequired,
 		setRawMode: PropTypes.func.isRequired,
-		onChange: PropTypes.func.isRequired
+		onChange: PropTypes.func.isRequired,
+		onSubmit: PropTypes.func
 	}
 
 	static defaultProps = {
 		placeholder: '',
 		showCursor: true,
 		focus: true,
-		mask: undefined
+		mask: undefined,
+		onSubmit: undefined
 	};
 
 	state = {
@@ -85,7 +87,7 @@ class TextInput extends PureComponent {
 	}
 
 	handleInput = data => {
-		const {value: originalValue, focus, showCursor, mask} = this.props;
+		const {value: originalValue, focus, showCursor, mask, onChange, onSubmit} = this.props;
 		const {cursorOffset: originalCursorOffset} = this.state;
 
 		if (focus === false) {
@@ -94,7 +96,15 @@ class TextInput extends PureComponent {
 
 		const s = String(data);
 
-		if (s === ARROW_UP || s === ARROW_DOWN || s === ENTER || s === CTRL_C) {
+		if (s === ARROW_UP || s === ARROW_DOWN || s === CTRL_C) {
+			return;
+		}
+
+		if (s === ENTER) {
+			if (onSubmit) {
+				onSubmit(originalValue);
+			}
+
 			return;
 		}
 
@@ -128,7 +138,7 @@ class TextInput extends PureComponent {
 		this.setState({cursorOffset});
 
 		if (value !== originalValue) {
-			this.props.onChange(value);
+			onChange(value);
 		}
 	}
 }
