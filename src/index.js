@@ -124,7 +124,7 @@ class TextInput extends PureComponent {
 			cursorOffset--;
 		} else {
 			value = value.substr(0, cursorOffset) + s + value.substr(cursorOffset, value.length);
-			cursorOffset++;
+			cursorOffset += s.length;
 		}
 
 		if (cursorOffset < 0) {

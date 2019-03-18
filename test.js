@@ -9,6 +9,7 @@ const noop = () => {};
 
 const CURSOR = chalk.inverse(' ');
 const ENTER = '\r';
+const ARROW_LEFT = '\u001B[D';
 
 test('default state', t => {
 	const {lastFrame} = render(<TextInput value="" onChange={noop}/>);
@@ -87,4 +88,21 @@ test('onSubmit', t => {
 	t.is(lastFrame(), `X${CURSOR}`);
 	t.true(onSubmit.calledWith('X'));
 	t.true(onSubmit.calledOnce);
+});
+
+test('paste and move cursor', t => {
+	const StatefulTextInput = () => {
+		const [value, setValue] = useState('');
+
+		return <TextInput value={value} onChange={setValue}/>;
+	};
+
+	const {stdin, lastFrame} = render(<StatefulTextInput/>);
+
+	stdin.write('A');
+	stdin.write('B');
+	stdin.write(ARROW_LEFT);
+	stdin.write('Hello World');
+
+	t.is(lastFrame(), `AHello World${chalk.inverse('B')}`);
 });
