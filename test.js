@@ -100,15 +100,18 @@ test('paste and move cursor', t => {
 
 	const {stdin, lastFrame} = render(<StatefulTextInput/>);
 
+	// Need this to invert each char separately
+	const inverse = str => str.split('').map(c => chalk.inverse(c)).join('');
+
 	stdin.write('A');
-	t.is(lastFrame(), `A${CURSOR}`);
 	stdin.write('B');
 	t.is(lastFrame(), `AB${CURSOR}`);
+
 	stdin.write(ARROW_LEFT);
 	t.is(lastFrame(), `A${chalk.inverse('B')}`);
 
 	stdin.write('Hello World');
-	t.is(lastFrame(), `A${chalk.inverse('Hello WorldB')}`);
+	t.is(lastFrame(), `A${inverse('Hello WorldB')}`);
 
 	stdin.write(ARROW_RIGHT);
 	t.is(lastFrame(), `AHello WorldB${CURSOR}`);
