@@ -34,12 +34,13 @@ class TextInput extends PureComponent {
 	};
 
 	state = {
-		cursorOffset: 0
+		cursorOffset: 0,
+		cursorWidth: 0
 	}
 
 	render() {
 		const {value, placeholder, showCursor, focus, mask} = this.props;
-		const {cursorOffset} = this.state;
+		const {cursorOffset, cursorWidth} = this.state;
 		const hasValue = value.length > 0;
 		let renderedValue = value;
 
@@ -49,7 +50,7 @@ class TextInput extends PureComponent {
 
 			let i = 0;
 			for (const char of value) {
-				if (i++ === cursorOffset) {
+				if (i >= cursorOffset - cursorWidth & i++ <= cursorOffset) {
 					renderedValue += chalk.inverse(char);
 				} else {
 					renderedValue += char;
@@ -110,6 +111,7 @@ class TextInput extends PureComponent {
 
 		let cursorOffset = originalCursorOffset;
 		let value = originalValue;
+		let cursorWidth = 0;
 
 		if (s === ARROW_LEFT) {
 			if (showCursor && !mask) {
@@ -125,6 +127,10 @@ class TextInput extends PureComponent {
 		} else {
 			value = value.substr(0, cursorOffset) + s + value.substr(cursorOffset, value.length);
 			cursorOffset += s.length;
+
+			if (s.length > 1) {
+				cursorWidth = s.length;
+			}
 		}
 
 		if (cursorOffset < 0) {
@@ -135,7 +141,7 @@ class TextInput extends PureComponent {
 			cursorOffset = value.length;
 		}
 
-		this.setState({cursorOffset});
+		this.setState({cursorOffset, cursorWidth});
 
 		if (value !== originalValue) {
 			onChange(value);
