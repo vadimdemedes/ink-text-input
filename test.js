@@ -90,7 +90,7 @@ test('onSubmit', t => {
 	t.true(onSubmit.calledOnce);
 });
 
-test('correct cursor position', t => {
+test('paste and move cursor', t => {
 	const StatefulTextInput = () => {
 		const [value, setValue] = useState('');
 
