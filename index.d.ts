@@ -30,12 +30,12 @@ export type InkTextInputProps = {
 	/**
 	 * Function to call when value updates.
 	 */
-	onChange: (value:string) => void;
+	onChange: (value: string) => void;
 
 	/**
 	 * Function to call when `Enter` is pressed, where first argument is a value of the input.
 	 */
-	onSubmit?: (value:string) => void;
+	onSubmit?: (value: string) => void;
 };
 
 declare class InkTextInput extends React.Component<InkTextInputProps> {}
