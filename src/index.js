@@ -34,7 +34,7 @@ class TextInput extends PureComponent {
 	};
 
 	state = {
-		cursorOffset: 0
+		cursorOffset: (this.props.value || '').length
 	}
 
 	render() {
