@@ -22,7 +22,8 @@ class TextInput extends PureComponent {
 		stdin: PropTypes.object.isRequired,
 		setRawMode: PropTypes.func.isRequired,
 		onChange: PropTypes.func.isRequired,
-		onSubmit: PropTypes.func
+		onSubmit: PropTypes.func,
+		highlightPasted: PropTypes.bool
 	}
 
 	static defaultProps = {
@@ -30,7 +31,8 @@ class TextInput extends PureComponent {
 		showCursor: true,
 		focus: true,
 		mask: undefined,
-		onSubmit: undefined
+		onSubmit: undefined,
+		highlightPasted: false
 	};
 
 	state = {
@@ -39,10 +41,11 @@ class TextInput extends PureComponent {
 	}
 
 	render() {
-		const {value, placeholder, showCursor, focus, mask} = this.props;
+		const {value, placeholder, showCursor, focus, mask, highlightPasted} = this.props;
 		const {cursorOffset, cursorWidth} = this.state;
 		const hasValue = value.length > 0;
 		let renderedValue = value;
+		const cursorActualWidth = highlightPasted ? cursorWidth : 0;
 
 		// Fake mouse cursor, because it's too inconvenient to deal with actual cursor and ansi escapes
 		if (showCursor && !mask && focus) {
@@ -50,7 +53,7 @@ class TextInput extends PureComponent {
 
 			let i = 0;
 			for (const char of value) {
-				if (i >= cursorOffset - cursorWidth && i <= cursorOffset) {
+				if (i >= cursorOffset - cursorActualWidth && i <= cursorOffset) {
 					renderedValue += chalk.inverse(char);
 				} else {
 					renderedValue += char;
