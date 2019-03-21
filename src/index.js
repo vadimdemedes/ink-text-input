@@ -34,7 +34,7 @@ class TextInput extends PureComponent {
 	};
 
 	state = {
-    cursorOffset: (this.props.value || '').length,
+		cursorOffset: (this.props.value || '').length,
 		cursorWidth: 0
 	}
 
@@ -50,11 +50,13 @@ class TextInput extends PureComponent {
 
 			let i = 0;
 			for (const char of value) {
-				if (i >= cursorOffset - cursorWidth & i++ <= cursorOffset) {
+				if (i >= cursorOffset - cursorWidth && i <= cursorOffset) {
 					renderedValue += chalk.inverse(char);
 				} else {
 					renderedValue += char;
 				}
+
+				i++;
 			}
 
 			if (value.length > 0 && cursorOffset === value.length) {
