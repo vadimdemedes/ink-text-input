@@ -38,6 +38,4 @@ export type InkTextInputProps = {
 	onSubmit?: (value: string) => void;
 };
 
-declare class InkTextInput extends React.Component<InkTextInputProps> {}
-
-export default InkTextInput;
+export default class InkTextInput extends React.Component<InkTextInputProps> {}
