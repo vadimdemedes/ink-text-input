@@ -23,7 +23,7 @@ class TextInput extends PureComponent {
 		setRawMode: PropTypes.func.isRequired,
 		onChange: PropTypes.func.isRequired,
 		onSubmit: PropTypes.func,
-		highlightPasted: PropTypes.bool
+		highlightPastedText: PropTypes.bool
 	}
 
 	static defaultProps = {
@@ -32,7 +32,7 @@ class TextInput extends PureComponent {
 		focus: true,
 		mask: undefined,
 		onSubmit: undefined,
-		highlightPasted: false
+		highlightPastedText: false
 	};
 
 	state = {
@@ -41,11 +41,11 @@ class TextInput extends PureComponent {
 	}
 
 	render() {
-		const {value, placeholder, showCursor, focus, mask, highlightPasted} = this.props;
+		const {value, placeholder, showCursor, focus, mask, highlightPastedText} = this.props;
 		const {cursorOffset, cursorWidth} = this.state;
 		const hasValue = value.length > 0;
 		let renderedValue = value;
-		const cursorActualWidth = highlightPasted ? cursorWidth : 0;
+		const cursorActualWidth = highlightPastedText ? cursorWidth : 0;
 
 		// Fake mouse cursor, because it's too inconvenient to deal with actual cursor and ansi escapes
 		if (showCursor && !mask && focus) {

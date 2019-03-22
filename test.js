@@ -101,7 +101,7 @@ test('paste and move cursor', t => {
 	const StatefulTextInput = () => {
 		const [value, setValue] = useState('');
 
-		return <TextInput highlightPasted value={value} onChange={setValue}/>;
+		return <TextInput highlightPastedText value={value} onChange={setValue}/>;
 	};
 
 	const {stdin, lastFrame} = render(<StatefulTextInput/>);
