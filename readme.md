@@ -80,7 +80,7 @@ Whether to show cursor and allow navigation inside text input with arrow keys.
 Type: `boolean`<br>
 Default: `false`
 
-Whether to highlight pasted text.
+Highlight pasted text.
 
 ### mask
 
