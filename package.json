@@ -14,13 +14,15 @@
 		"node": ">=8"
 	},
 	"scripts": {
-		"test": "xo && FORCE_COLOR=1 ava",
+		"test": "xo && FORCE_COLOR=1 ava && npm run typecheck",
 		"build": "babel src --out-dir=build",
 		"prepare": "npm run build",
-		"pretest": "npm run build"
+		"pretest": "npm run build",
+		"typecheck": "tsc --noEmit --jsx react index.test-d.tsx"
 	},
 	"files": [
-		"build"
+		"build",
+		"index.d.ts"
 	],
 	"keywords": [
 		"ink",
@@ -42,6 +44,7 @@
 		"@babel/core": "^7.1.2",
 		"@babel/plugin-proposal-class-properties": "^7.1.0",
 		"@babel/preset-react": "^7.0.0",
+		"@types/react": "^16.8.8",
 		"ava": "*",
 		"babel-eslint": "^10.0.1",
 		"chalk": "^2.4.2",
@@ -51,6 +54,7 @@
 		"ink-testing-library": "^1.0.0",
 		"react": "^16.5.2",
 		"sinon": "^7.2.7",
+		"typescript": "^3.3.3333",
 		"xo": "*"
 	},
 	"babel": {
