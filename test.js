@@ -10,6 +10,7 @@ const noop = () => {};
 const CURSOR = chalk.inverse(' ');
 const ENTER = '\r';
 const ARROW_LEFT = '\u001B[D';
+const ARROW_RIGHT = '\u001B[C';
 
 test('default state', t => {
 	const {lastFrame} = render(<TextInput value="" onChange={noop}/>);
@@ -100,15 +101,24 @@ test('paste and move cursor', t => {
 	const StatefulTextInput = () => {
 		const [value, setValue] = useState('');
 
-		return <TextInput value={value} onChange={setValue}/>;
+		return <TextInput highlightPastedText value={value} onChange={setValue}/>;
 	};
 
 	const {stdin, lastFrame} = render(<StatefulTextInput/>);
 
+	// Need this to invert each char separately
+	const inverse = str => str.split('').map(c => chalk.inverse(c)).join('');
+
 	stdin.write('A');
 	stdin.write('B');
-	stdin.write(ARROW_LEFT);
-	stdin.write('Hello World');
+	t.is(lastFrame(), `AB${CURSOR}`);
 
-	t.is(lastFrame(), `AHello World${chalk.inverse('B')}`);
+	stdin.write(ARROW_LEFT);
+	t.is(lastFrame(), `A${chalk.inverse('B')}`);
+
+	stdin.write('Hello World');
+	t.is(lastFrame(), `A${inverse('Hello WorldB')}`);
+
+	stdin.write(ARROW_RIGHT);
+	t.is(lastFrame(), `AHello WorldB${CURSOR}`);
 });

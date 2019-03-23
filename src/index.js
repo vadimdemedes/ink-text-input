@@ -22,7 +22,8 @@ class TextInput extends PureComponent {
 		stdin: PropTypes.object.isRequired,
 		setRawMode: PropTypes.func.isRequired,
 		onChange: PropTypes.func.isRequired,
-		onSubmit: PropTypes.func
+		onSubmit: PropTypes.func,
+		highlightPastedText: PropTypes.bool
 	}
 
 	static defaultProps = {
@@ -30,18 +31,21 @@ class TextInput extends PureComponent {
 		showCursor: true,
 		focus: true,
 		mask: undefined,
-		onSubmit: undefined
+		onSubmit: undefined,
+		highlightPastedText: false
 	};
 
 	state = {
-		cursorOffset: (this.props.value || '').length
+		cursorOffset: (this.props.value || '').length,
+		cursorWidth: 0
 	}
 
 	render() {
-		const {value, placeholder, showCursor, focus, mask} = this.props;
-		const {cursorOffset} = this.state;
+		const {value, placeholder, showCursor, focus, mask, highlightPastedText} = this.props;
+		const {cursorOffset, cursorWidth} = this.state;
 		const hasValue = value.length > 0;
 		let renderedValue = value;
+		const cursorActualWidth = highlightPastedText ? cursorWidth : 0;
 
 		// Fake mouse cursor, because it's too inconvenient to deal with actual cursor and ansi escapes
 		if (showCursor && !mask && focus) {
@@ -49,11 +53,13 @@ class TextInput extends PureComponent {
 
 			let i = 0;
 			for (const char of value) {
-				if (i++ === cursorOffset) {
+				if (i >= cursorOffset - cursorActualWidth && i <= cursorOffset) {
 					renderedValue += chalk.inverse(char);
 				} else {
 					renderedValue += char;
 				}
+
+				i++;
 			}
 
 			if (value.length > 0 && cursorOffset === value.length) {
@@ -110,6 +116,7 @@ class TextInput extends PureComponent {
 
 		let cursorOffset = originalCursorOffset;
 		let value = originalValue;
+		let cursorWidth = 0;
 
 		if (s === ARROW_LEFT) {
 			if (showCursor && !mask) {
@@ -125,6 +132,10 @@ class TextInput extends PureComponent {
 		} else {
 			value = value.substr(0, cursorOffset) + s + value.substr(cursorOffset, value.length);
 			cursorOffset += s.length;
+
+			if (s.length > 1) {
+				cursorWidth = s.length;
+			}
 		}
 
 		if (cursorOffset < 0) {
@@ -135,7 +146,7 @@ class TextInput extends PureComponent {
 			cursorOffset = value.length;
 		}
 
-		this.setState({cursorOffset});
+		this.setState({cursorOffset, cursorWidth});
 
 		if (value !== originalValue) {
 			onChange(value);

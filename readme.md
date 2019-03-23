@@ -75,6 +75,13 @@ Default: `false`
 
 Whether to show cursor and allow navigation inside text input with arrow keys.
 
+### highlightPastedText
+
+Type: `boolean`<br>
+Default: `false`
+
+Highlight pasted text.
+
 ### mask
 
 Type: `string`
