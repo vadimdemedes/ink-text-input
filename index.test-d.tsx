@@ -11,6 +11,7 @@ const AllPropsInput = () => (
 		focus={false}
 		mask="*"
 		showCursor
+		highlightPastedText
 		onChange={handler}
 		onSubmit={handler}
 	/>

@@ -18,12 +18,12 @@ class TextInput extends PureComponent {
 		placeholder: PropTypes.string,
 		focus: PropTypes.bool,
 		mask: PropTypes.string,
+		highlightPastedText: PropTypes.bool,
 		showCursor: PropTypes.bool,
 		stdin: PropTypes.object.isRequired,
 		setRawMode: PropTypes.func.isRequired,
 		onChange: PropTypes.func.isRequired,
-		onSubmit: PropTypes.func,
-		highlightPastedText: PropTypes.bool
+		onSubmit: PropTypes.func
 	}
 
 	static defaultProps = {
@@ -31,8 +31,8 @@ class TextInput extends PureComponent {
 		showCursor: true,
 		focus: true,
 		mask: undefined,
-		onSubmit: undefined,
-		highlightPastedText: false
+		highlightPastedText: false,
+		onSubmit: undefined
 	};
 
 	state = {

@@ -28,6 +28,11 @@ export type InkTextInputProps = {
 	showCursor?: boolean;
 
 	/**
+	 * Highlight pasted text
+	 */
+	highlightPastedText?: boolean;
+
+	/**
 	 * Function to call when value updates.
 	 */
 	onChange: (value: string) => void;
