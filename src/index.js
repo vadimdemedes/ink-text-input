@@ -22,6 +22,7 @@ class TextInput extends PureComponent {
 		showCursor: PropTypes.bool,
 		stdin: PropTypes.object.isRequired,
 		setRawMode: PropTypes.func.isRequired,
+		keepRawMode: PropTypes.bool,
 		onChange: PropTypes.func.isRequired,
 		onSubmit: PropTypes.func
 	}
@@ -32,6 +33,7 @@ class TextInput extends PureComponent {
 		focus: true,
 		mask: undefined,
 		highlightPastedText: false,
+		keepRawMode: false,
 		onSubmit: undefined
 	};
 
@@ -86,10 +88,12 @@ class TextInput extends PureComponent {
 	}
 
 	componentWillUnmount() {
-		const {stdin, setRawMode} = this.props;
+		const {stdin, setRawMode, keepRawMode} = this.props;
 
 		stdin.removeListener('data', this.handleInput);
-		setRawMode(false);
+		if (!keepRawMode) {
+			setRawMode(false);
+		}
 	}
 
 	handleInput = data => {
