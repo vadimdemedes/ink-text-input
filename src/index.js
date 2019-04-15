@@ -40,6 +40,8 @@ class TextInput extends PureComponent {
 		cursorWidth: 0
 	}
 
+	isMounted = false;
+
 	render() {
 		const {value, placeholder, showCursor, focus, mask, highlightPastedText} = this.props;
 		const {cursorOffset, cursorWidth} = this.state;
@@ -81,6 +83,7 @@ class TextInput extends PureComponent {
 	componentDidMount() {
 		const {stdin, setRawMode} = this.props;
 
+		this.isMounted = true;
 		setRawMode(true);
 		stdin.on('data', this.handleInput);
 	}
@@ -88,6 +91,7 @@ class TextInput extends PureComponent {
 	componentWillUnmount() {
 		const {stdin, setRawMode} = this.props;
 
+		this.isMounted = false;
 		stdin.removeListener('data', this.handleInput);
 		setRawMode(false);
 	}
@@ -96,7 +100,7 @@ class TextInput extends PureComponent {
 		const {value: originalValue, focus, showCursor, mask, onChange, onSubmit} = this.props;
 		const {cursorOffset: originalCursorOffset} = this.state;
 
-		if (focus === false) {
+		if (focus === false || this.isMounted === false) {
 			return;
 		}
 
