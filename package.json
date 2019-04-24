@@ -1,13 +1,13 @@
 {
-	"name": "ink-text-input",
-	"version": "3.1.1",
+	"name": "@dorival/ink-text-input",
+	"version": "3.2.0",
 	"description": "Text input component for Ink",
 	"license": "MIT",
-	"repository": "vadimdemedes/ink-text-input",
+	"repository": "cpmech/ink-text-input",
 	"author": {
-		"name": "Vadim Demedes",
-		"email": "vdemedes@gmail.com",
-		"url": "github.com/vadimdemedes"
+		"name": "Dorival Pedroso",
+		"email": "dorival.pedroso@gmail.com",
+		"url": "https://github.com/cpmech"
 	},
 	"main": "build",
 	"engines": {
@@ -18,7 +18,8 @@
 		"build": "babel src --out-dir=build",
 		"prepare": "npm run build",
 		"pretest": "npm run build",
-		"typecheck": "tsc --noEmit --jsx react index.test-d.tsx"
+    "typecheck": "tsc --noEmit --jsx react index.test-d.tsx",
+		"dist": "yarn publish --access=public"
 	},
 	"files": [
 		"build",
