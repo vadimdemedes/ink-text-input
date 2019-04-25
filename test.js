@@ -11,6 +11,9 @@ const CURSOR = chalk.inverse(' ');
 const ENTER = '\r';
 const ARROW_LEFT = '\u001B[D';
 const ARROW_RIGHT = '\u001B[C';
+const BACKSPACE = '\x08';
+const BACKSPACE_DELETE = '\x7F';
+const DELETE = '\u001B[3~';
 
 test('default state', t => {
 	const {lastFrame} = render(<TextInput value="" onChange={noop}/>);
@@ -121,4 +124,36 @@ test('paste and move cursor', t => {
 
 	stdin.write(ARROW_RIGHT);
 	t.is(lastFrame(), `AHello WorldB${CURSOR}`);
+});
+
+test('backspace and delete', t => {
+	const StatefulTextInput = () => {
+		const [value, setValue] = useState('');
+
+		return <TextInput value={value} onChange={setValue}/>;
+	};
+
+	const {stdin, lastFrame} = render(<StatefulTextInput/>);
+
+	stdin.write('¡Hola World!');
+	t.is(lastFrame(), `¡Hola World!${CURSOR}`);
+
+	const sixTimes = [1, 2, 3, 4, 5, 6];
+	sixTimes.forEach(() => stdin.write(ARROW_LEFT));
+	t.is(lastFrame(), `¡Hola ${chalk.inverse('W')}orld!`);
+
+	sixTimes.forEach(() => stdin.write(DELETE));
+	t.is(lastFrame(), `¡Hola ${CURSOR}`);
+
+	stdin.write('Mundo!');
+	t.is(lastFrame(), `¡Hola Mundo!${CURSOR}`);
+
+	sixTimes.forEach(() => stdin.write(BACKSPACE));
+	t.is(lastFrame(), `¡Hola ${CURSOR}`);
+
+	stdin.write('Mundo!');
+	t.is(lastFrame(), `¡Hola Mundo!${CURSOR}`);
+
+	sixTimes.forEach(() => stdin.write(BACKSPACE_DELETE));
+	t.is(lastFrame(), `¡Hola ${CURSOR}`);
 });
