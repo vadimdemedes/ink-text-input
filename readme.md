@@ -16,6 +16,7 @@ $ npm install ink-text-input
 import React from 'react';
 import {render, Box} from 'ink';
 import TextInput from 'ink-text-input';
+// import {UncontrolledTextInput as TextInput} from 'ink-text-input';
 
 class SearchQuery extends React.Component {
 	constructor() {
@@ -26,6 +27,7 @@ class SearchQuery extends React.Component {
 		};
 
 		this.handleChange = this.handleChange.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
 	render() {
@@ -39,12 +41,17 @@ class SearchQuery extends React.Component {
 					value={this.state.query}
 					onChange={this.handleChange}
 				/>
+				{/* <TextInput onSubmit={this.handleSubmit}/> */}
 			</Box>
 		);
 	}
 
 	handleChange(query) {
 		this.setState({query});
+	}
+
+	handleSubmit(query) {
+		// Do something with query
 	}
 }
 

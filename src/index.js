@@ -169,3 +169,19 @@ export default class TextInputWithStdin extends PureComponent {
 		);
 	}
 }
+
+export class UncontrolledTextInput extends PureComponent {
+	state = {
+		value: ''
+	}
+
+	setValue(value) {
+		this.setState({value});
+	}
+
+	setValue = this.setValue.bind(this);
+
+	render() {
+		return <TextInputWithStdin {...this.props} value={this.state.value} onChange={this.setValue}/>;
+	}
+}
