@@ -16,7 +16,6 @@ $ npm install ink-text-input
 import React from 'react';
 import {render, Box} from 'ink';
 import TextInput from 'ink-text-input';
-// import {UncontrolledTextInput as TextInput} from 'ink-text-input';
 
 class SearchQuery extends React.Component {
 	constructor() {
@@ -27,7 +26,6 @@ class SearchQuery extends React.Component {
 		};
 
 		this.handleChange = this.handleChange.bind(this);
-		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
 	render() {
@@ -41,17 +39,12 @@ class SearchQuery extends React.Component {
 					value={this.state.query}
 					onChange={this.handleChange}
 				/>
-				{/* <TextInput onSubmit={this.handleSubmit}/> */}
 			</Box>
 		);
 	}
 
 	handleChange(query) {
 		this.setState({query});
-	}
-
-	handleSubmit(query) {
-		// Do something with query
 	}
 }
 
@@ -115,6 +108,33 @@ Type: `Function`
 
 Function to call when `Enter` is pressed, where first argument is a value of the input.
 
+## Alternative usage
+
+```jsx
+import React from 'react';
+import {render, Box} from 'ink';
+import {UncontrolledTextInput as TextInput} from 'ink-text-input';
+
+function handleSubmit(query) {
+	// Do something with query
+}
+
+function SearchQuery() {
+	return (
+		<Box>
+			<Box marginRight={1}>
+				Enter your query:
+			</Box>
+
+			<TextInput
+				onSubmit={handleSubmit}
+			/>
+		</Box>
+	);
+}
+
+render(<SearchQuery/>);
+```
 
 ## License
 
