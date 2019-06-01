@@ -3,7 +3,7 @@ import test from 'ava';
 import chalk from 'chalk';
 import {render} from 'ink-testing-library';
 import sinon from 'sinon';
-import TextInput from '.';
+import TextInput, {UncontrolledTextInput} from '.';
 
 const noop = () => {};
 
@@ -42,7 +42,7 @@ test('display value with mask', t => {
 	t.is(lastFrame(), '*****');
 });
 
-test('accept input', t => {
+test('accept input (controlled)', t => {
 	const StatefulTextInput = () => {
 		const [value, setValue] = useState('');
 
@@ -50,6 +50,16 @@ test('accept input', t => {
 	};
 
 	const {stdin, lastFrame} = render(<StatefulTextInput/>);
+
+	t.is(lastFrame(), CURSOR);
+
+	stdin.write('X');
+
+	t.is(lastFrame(), `X${CURSOR}`);
+});
+
+test('accept input (uncontrolled)', t => {
+	const {stdin, lastFrame} = render(<UncontrolledTextInput/>);
 
 	t.is(lastFrame(), CURSOR);
 
