@@ -108,30 +108,30 @@ Type: `Function`
 
 Function to call when `Enter` is pressed, where first argument is a value of the input.
 
-## Alternative usage
+## Uncontrolled usage
+
+This component also exposes an [uncontrolled](https://reactjs.org/docs/uncontrolled-components.html) version, which handles `value` changes for you. To receive the final input value, use `onSubmit` prop.
 
 ```jsx
 import React from 'react';
 import {render, Box} from 'ink';
-import {UncontrolledTextInput as TextInput} from 'ink-text-input';
+import {UncontrolledTextInput} from 'ink-text-input';
 
-function handleSubmit(query) {
-	// Do something with query
-}
-
-function SearchQuery() {
+const SearchQuery = () => {
+	const handleSubmit = query => {
+		// Do something with query
+	};
+	
 	return (
 		<Box>
 			<Box marginRight={1}>
 				Enter your query:
 			</Box>
 
-			<TextInput
-				onSubmit={handleSubmit}
-			/>
+			<UncontrolledTextInput onSubmit={handleSubmit}/>
 		</Box>
 	);
-}
+};
 
 render(<SearchQuery/>);
 ```
