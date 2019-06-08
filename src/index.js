@@ -21,6 +21,7 @@ class TextInput extends PureComponent {
 		highlightPastedText: PropTypes.bool,
 		showCursor: PropTypes.bool,
 		stdin: PropTypes.object.isRequired,
+		isRawModeSupported: PropTypes.bool.isRequired,
 		setRawMode: PropTypes.func.isRequired,
 		onChange: PropTypes.func.isRequired,
 		onSubmit: PropTypes.func
@@ -81,19 +82,26 @@ class TextInput extends PureComponent {
 	}
 
 	componentDidMount() {
-		const {stdin, setRawMode} = this.props;
+		const {stdin, isRawModeSupported, setRawMode} = this.props;
 
 		this.isMounted = true;
-		setRawMode(true);
+
+		if (isRawModeSupported) {
+			setRawMode(true);
+		}
+
 		stdin.on('data', this.handleInput);
 	}
 
 	componentWillUnmount() {
-		const {stdin, setRawMode} = this.props;
+		const {stdin, isRawModeSupported, setRawMode} = this.props;
 
 		this.isMounted = false;
 		stdin.removeListener('data', this.handleInput);
-		setRawMode(false);
+
+		if (isRawModeSupported) {
+			setRawMode(false);
+		}
 	}
 
 	handleInput = data => {
@@ -162,8 +170,8 @@ export default class TextInputWithStdin extends PureComponent {
 	render() {
 		return (
 			<StdinContext.Consumer>
-				{({stdin, setRawMode}) => (
-					<TextInput {...this.props} stdin={stdin} setRawMode={setRawMode}/>
+				{({stdin, isRawModeSupported, setRawMode}) => (
+					<TextInput {...this.props} stdin={stdin} isRawModeSupported={isRawModeSupported} setRawMode={setRawMode}/>
 				)}
 			</StdinContext.Consumer>
 		);
