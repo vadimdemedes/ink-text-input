@@ -71,7 +71,7 @@ Text to display when `value` is empty.
 ### showCursor
 
 Type: `boolean`<br>
-Default: `false`
+Default: `true`
 
 Whether to show cursor and allow navigation inside text input with arrow keys.
 
