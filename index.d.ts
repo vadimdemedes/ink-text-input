@@ -1,11 +1,6 @@
 import * as React from 'react';
 
-export type InkTextInputProps = {
-	/**
-	 * Value to display in a text input.
-	 */
-	value: string;
-
+interface CommonProps {
 	/**
 	 * Text to display when `value` is empty.
 	 */
@@ -33,14 +28,30 @@ export type InkTextInputProps = {
 	highlightPastedText?: boolean;
 
 	/**
-	 * Function to call when value updates.
-	 */
-	onChange: (value: string) => void;
-
-	/**
 	 * Function to call when `Enter` is pressed, where first argument is a value of the input.
 	 */
 	onSubmit?: (value: string) => void;
-};
+}
+
+export interface InkTextInputProps extends CommonProps {
+	/**
+	 * Value to display in a text input.
+	 */
+	value: string;
+
+	/**
+	 * Function to call when value updates.
+	 */
+	onChange: (value: string) => void;
+}
+
+export interface InkUncontrolledTextInputProps extends CommonProps {
+	/**
+	 * Function to call when `Enter` is pressed, where first argument is a value of the input.
+	 */
+	onSubmit: (value: string) => void;
+}
 
 export default class InkTextInput extends React.Component<InkTextInputProps> {}
+
+export class UncontrolledTextInput extends React.Component<InkUncontrolledTextInputProps> {}
