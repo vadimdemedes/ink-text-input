@@ -39,11 +39,11 @@
 	"dependencies": {
 		"prop-types": "^15.5.10"
 	},
-  "peerDependencies": {
-    "react": "^16.5.2",
-    "ink": "^2.0.0",
-    "chalk": "^2.4.2"
-  },
+        "peerDependencies": {
+          "react": "^16.5.2",
+          "ink": "^2.0.0",
+          "chalk": "^2.4.2"
+  	},
 	"devDependencies": {
 		"@babel/cli": "^7.1.2",
 		"@babel/core": "^7.1.2",
