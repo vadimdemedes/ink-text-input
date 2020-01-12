@@ -57,6 +57,10 @@
 		"typescript": "^3.3.3333",
 		"xo": "*"
 	},
+	"peerDependencies": {
+		"ink": "^2.0.0",
+		"react": "^16.5.2"
+	},
 	"babel": {
 		"plugins": [
 			"@babel/plugin-proposal-class-properties"
