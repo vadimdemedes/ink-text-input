@@ -131,10 +131,10 @@ class TextInput extends PureComponent {
 				cursorOffset++;
 			}
 		} else if (s === BACKSPACE || s === DELETE) {
-			value = value.substr(0, cursorOffset - 1) + value.substr(cursorOffset, value.length);
+			value = value.slice(0, cursorOffset - 1) + value.slice(cursorOffset, value.length);
 			cursorOffset--;
 		} else {
-			value = value.substr(0, cursorOffset) + s + value.substr(cursorOffset, value.length);
+			value = value.slice(0, cursorOffset) + s + value.slice(cursorOffset, value.length);
 			cursorOffset += s.length;
 
 			if (s.length > 1) {
