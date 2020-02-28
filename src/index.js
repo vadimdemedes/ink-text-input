@@ -11,6 +11,8 @@ const ENTER = '\r';
 const CTRL_C = '\x03';
 const BACKSPACE = '\x08';
 const DELETE = '\x7F';
+const TAB = '\t';
+const SHIFT_TAB = '\u001B[Z';
 
 class TextInput extends PureComponent {
 	static propTypes = {
@@ -106,7 +108,7 @@ class TextInput extends PureComponent {
 
 		const s = String(data);
 
-		if (s === ARROW_UP || s === ARROW_DOWN || s === CTRL_C) {
+		if (s === ARROW_UP || s === ARROW_DOWN || s === CTRL_C || s === TAB || s === SHIFT_TAB) {
 			return;
 		}
 

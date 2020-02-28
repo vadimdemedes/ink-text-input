@@ -84,6 +84,19 @@ test('ignore input when not in focus', t => {
 	t.is(frames.length, 1);
 });
 
+test('ignore input for TAB', t => {
+	const StatefulTextInput = () => {
+		const [value, setValue] = useState('');
+
+		return <TextInput focus={false} value={value} onChange={setValue}/>;
+	};
+
+	const {stdin, frames, lastFrame} = render(<StatefulTextInput/>);
+
+	stdin.write('\n');
+	t.is(lastFrame(), '');
+});
+
 test('onSubmit', t => {
 	const onSubmit = sinon.spy();
 
