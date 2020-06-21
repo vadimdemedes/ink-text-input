@@ -92,7 +92,7 @@ test('ignore input for Tab and Shift+Tab keys', t => {
 		return <TextInput value={value} onChange={setValue}/>;
 	};
 
-	const {stdin, frames, lastFrame} = render(<Test/>);
+	const {stdin, lastFrame} = render(<Test/>);
 
 	stdin.write('\t');
 	t.is(lastFrame(), '');
