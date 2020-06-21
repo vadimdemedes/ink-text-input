@@ -134,25 +134,23 @@ test('paste and move cursor', t => {
 	t.is(lastFrame(), `AHello WorldB${CURSOR}`);
 });
 
-test('delete at begigging of text', t => {
-	const StatefulTextInput = () => {
+test('delete at the beginning of text', t => {
+	const Test = () => {
 		const [value, setValue] = useState('');
 
 		return <TextInput value={value} onChange={setValue}/>;
 	};
 
-	const {stdin, lastFrame} = render(<StatefulTextInput/>);
+	const {stdin, lastFrame} = render(<Test/>);
 
 	stdin.write('T');
 	stdin.write('e');
 	stdin.write('s');
 	stdin.write('t');
-
 	stdin.write(ARROW_LEFT);
 	stdin.write(ARROW_LEFT);
 	stdin.write(ARROW_LEFT);
 	stdin.write(ARROW_LEFT);
-
 	stdin.write(DELETE);
 
 	t.is(lastFrame(), `${chalk.inverse('T')}est`);
