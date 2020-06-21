@@ -10,7 +10,7 @@ const ARROW_RIGHT = '\u001B[C';
 const ENTER = '\r';
 const CTRL_C = '\x03';
 const BACKSPACE = '\x08';
-const DELETE = '\x7F';
+const DELETE = '\u007F';
 
 class TextInput extends PureComponent {
 	static propTypes = {
