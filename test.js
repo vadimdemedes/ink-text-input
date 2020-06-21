@@ -11,7 +11,7 @@ const CURSOR = chalk.inverse(' ');
 const ENTER = '\r';
 const ARROW_LEFT = '\u001B[D';
 const ARROW_RIGHT = '\u001B[C';
-const DELETE = '\x7F';
+const DELETE = '\u007F';
 
 test('default state', t => {
 	const {lastFrame} = render(<TextInput value="" onChange={noop}/>);
