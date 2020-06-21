@@ -49,10 +49,12 @@ class TextInput extends PureComponent {
 		const {cursorOffset, cursorWidth} = this.state;
 		const hasValue = value.length > 0;
 		let renderedValue = value;
+		let renderedPlaceholder;
 		const cursorActualWidth = highlightPastedText ? cursorWidth : 0;
 
 		// Fake mouse cursor, because it's too inconvenient to deal with actual cursor and ansi escapes
 		if (showCursor && !mask && focus) {
+			renderedPlaceholder = placeholder.length > 0 ? chalk.inverse(placeholder[0]) + placeholder.slice(1) : chalk.inverse(' ');
 			renderedValue = value.length > 0 ? '' : chalk.inverse(' ');
 
 			let i = 0;
@@ -77,7 +79,7 @@ class TextInput extends PureComponent {
 
 		return (
 			<Color dim={!hasValue && placeholder}>
-				{placeholder ? (hasValue ? renderedValue : placeholder) : renderedValue}
+				{placeholder ? (hasValue ? renderedValue : renderedPlaceholder) : renderedValue}
 			</Color>
 		);
 	}

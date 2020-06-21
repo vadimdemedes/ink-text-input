@@ -34,7 +34,7 @@ test('display value with cursor', t => {
 test('display placeholder', t => {
 	const {lastFrame} = render(<TextInput value="" placeholder="Placeholder" onChange={noop}/>);
 
-	t.is(lastFrame(), chalk.dim('Placeholder'));
+	t.is(lastFrame(), chalk.dim(`${chalk.inverse('P')}laceholder`));
 });
 
 test('display value with mask', t => {
