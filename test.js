@@ -95,9 +95,9 @@ test('ignore input for Tab and Shift+Tab keys', t => {
 	const {stdin, lastFrame} = render(<Test/>);
 
 	stdin.write('\t');
-	t.is(lastFrame(), '');
+	t.is(lastFrame(), CURSOR);
 	stdin.write('\u001B[Z');
-	t.is(lastFrame(), '');
+	t.is(lastFrame(), CURSOR);
 });
 
 test('onSubmit', t => {
