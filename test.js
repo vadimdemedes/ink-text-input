@@ -11,6 +11,7 @@ const CURSOR = chalk.inverse(' ');
 const ENTER = '\r';
 const ARROW_LEFT = '\u001B[D';
 const ARROW_RIGHT = '\u001B[C';
+const DELETE = '\u007F';
 
 test('default state', t => {
 	const {lastFrame} = render(<TextInput value="" onChange={noop}/>);
@@ -131,4 +132,26 @@ test('paste and move cursor', t => {
 
 	stdin.write(ARROW_RIGHT);
 	t.is(lastFrame(), `AHello WorldB${CURSOR}`);
+});
+
+test('delete at the beginning of text', t => {
+	const Test = () => {
+		const [value, setValue] = useState('');
+
+		return <TextInput value={value} onChange={setValue}/>;
+	};
+
+	const {stdin, lastFrame} = render(<Test/>);
+
+	stdin.write('T');
+	stdin.write('e');
+	stdin.write('s');
+	stdin.write('t');
+	stdin.write(ARROW_LEFT);
+	stdin.write(ARROW_LEFT);
+	stdin.write(ARROW_LEFT);
+	stdin.write(ARROW_LEFT);
+	stdin.write(DELETE);
+
+	t.is(lastFrame(), `${chalk.inverse('T')}est`);
 });
