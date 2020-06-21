@@ -85,6 +85,21 @@ test('ignore input when not in focus', t => {
 	t.is(frames.length, 1);
 });
 
+test('ignore input for Tab and Shift+Tab keys', t => {
+	const Test = () => {
+		const [value, setValue] = useState('');
+
+		return <TextInput value={value} onChange={setValue}/>;
+	};
+
+	const {stdin, lastFrame} = render(<Test/>);
+
+	stdin.write('\t');
+	t.is(lastFrame(), CURSOR);
+	stdin.write('\u001B[Z');
+	t.is(lastFrame(), CURSOR);
+});
+
 test('onSubmit', t => {
 	const onSubmit = sinon.spy();
 
