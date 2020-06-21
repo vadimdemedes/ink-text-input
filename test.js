@@ -86,15 +86,17 @@ test('ignore input when not in focus', t => {
 });
 
 test('ignore input for Tab and Shift+Tab keys', t => {
-	const StatefulTextInput = () => {
+	const Test = () => {
 		const [value, setValue] = useState('');
 
-		return <TextInput focus={false} value={value} onChange={setValue}/>;
+		return <TextInput value={value} onChange={setValue}/>;
 	};
 
-	const {stdin, frames, lastFrame} = render(<StatefulTextInput/>);
+	const {stdin, frames, lastFrame} = render(<Test/>);
 
-	stdin.write('\n');
+	stdin.write('\t');
+	t.is(lastFrame(), '');
+	stdin.write('\u001B[Z');
 	t.is(lastFrame(), '');
 });
 
