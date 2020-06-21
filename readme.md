@@ -1,4 +1,4 @@
-# ink-text-input [![Build Status](https://travis-ci.org/vadimdemedes/ink-text-input.svg?branch=master)](https://travis-ci.org/vadimdemedes/ink-text-input)
+# ink-text-input ![test](https://github.com/vadimdemedes/ink-text-input/workflows/test/badge.svg)
 
 > Text input component for [Ink](https://github.com/vadimdemedes/ink).
 
