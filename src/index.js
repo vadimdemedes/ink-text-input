@@ -1,6 +1,6 @@
-import React, {PureComponent} from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import {Color, StdinContext} from 'ink';
+import { Color, StdinContext } from 'ink';
 import chalk from 'chalk';
 
 const ARROW_UP = '\u001B[A';
@@ -26,7 +26,7 @@ class TextInput extends PureComponent {
 		setRawMode: PropTypes.func.isRequired,
 		onChange: PropTypes.func.isRequired,
 		onSubmit: PropTypes.func
-	}
+	};
 
 	static defaultProps = {
 		placeholder: '',
@@ -40,13 +40,21 @@ class TextInput extends PureComponent {
 	state = {
 		cursorOffset: (this.props.value || '').length,
 		cursorWidth: 0
-	}
+	};
 
 	isMounted = false;
 
 	render() {
-		const {value: originalValue, placeholder, showCursor, focus, mask, highlightPastedText} = this.props;
-		const {cursorOffset, cursorWidth} = this.state;
+		const {
+			value: originalValue,
+			placeholder,
+			showCursor,
+			focus,
+			mask,
+			highlightPastedText
+		} = this.props;
+
+		const { cursorOffset, cursorWidth } = this.state;
 		const value = mask ? mask.repeat(originalValue.length) : originalValue;
 		const hasValue = value.length > 0;
 		let renderedValue = value;
@@ -55,7 +63,11 @@ class TextInput extends PureComponent {
 
 		// Fake mouse cursor, because it's too inconvenient to deal with actual cursor and ansi escapes
 		if (showCursor && focus) {
-			renderedPlaceholder = placeholder.length > 0 ? chalk.inverse(placeholder[0]) + placeholder.slice(1) : chalk.inverse(' ');
+			renderedPlaceholder =
+				placeholder.length > 0
+					? chalk.inverse(placeholder[0]) + placeholder.slice(1)
+					: chalk.inverse(' ');
+
 			renderedValue = value.length > 0 ? '' : chalk.inverse(' ');
 
 			let i = 0;
@@ -76,13 +88,17 @@ class TextInput extends PureComponent {
 
 		return (
 			<Color dim={!hasValue && placeholder}>
-				{placeholder ? (hasValue ? renderedValue : renderedPlaceholder) : renderedValue}
+				{placeholder
+					? hasValue
+						? renderedValue
+						: renderedPlaceholder
+					: renderedValue}
 			</Color>
 		);
 	}
 
 	componentDidMount() {
-		const {stdin, setRawMode} = this.props;
+		const { stdin, setRawMode } = this.props;
 
 		this.isMounted = true;
 		setRawMode(true);
@@ -90,7 +106,7 @@ class TextInput extends PureComponent {
 	}
 
 	componentWillUnmount() {
-		const {stdin, setRawMode} = this.props;
+		const { stdin, setRawMode } = this.props;
 
 		this.isMounted = false;
 		stdin.removeListener('data', this.handleInput);
@@ -98,8 +114,15 @@ class TextInput extends PureComponent {
 	}
 
 	handleInput = data => {
-		const {value: originalValue, focus, showCursor, onChange, onSubmit} = this.props;
-		const {cursorOffset: originalCursorOffset} = this.state;
+		const {
+			value: originalValue,
+			focus,
+			showCursor,
+			onChange,
+			onSubmit
+		} = this.props;
+
+		const { cursorOffset: originalCursorOffset } = this.state;
 
 		if (focus === false || this.isMounted === false) {
 			return;
@@ -107,7 +130,13 @@ class TextInput extends PureComponent {
 
 		const s = String(data);
 
-		if (s === ARROW_UP || s === ARROW_DOWN || s === CTRL_C || s === TAB || s === SHIFT_TAB) {
+		if (
+			s === ARROW_UP ||
+			s === ARROW_DOWN ||
+			s === CTRL_C ||
+			s === TAB ||
+			s === SHIFT_TAB
+		) {
 			return;
 		}
 
@@ -133,11 +162,18 @@ class TextInput extends PureComponent {
 			}
 		} else if (s === BACKSPACE || s === DELETE) {
 			if (cursorOffset > 0) {
-				value = value.slice(0, cursorOffset - 1) + value.slice(cursorOffset, value.length);
+				value =
+					value.slice(0, cursorOffset - 1) +
+					value.slice(cursorOffset, value.length);
+
 				cursorOffset--;
 			}
 		} else {
-			value = value.slice(0, cursorOffset) + s + value.slice(cursorOffset, value.length);
+			value =
+				value.slice(0, cursorOffset) +
+				s +
+				value.slice(cursorOffset, value.length);
+
 			cursorOffset += s.length;
 
 			if (s.length > 1) {
@@ -153,20 +189,20 @@ class TextInput extends PureComponent {
 			cursorOffset = value.length;
 		}
 
-		this.setState({cursorOffset, cursorWidth});
+		this.setState({ cursorOffset, cursorWidth });
 
 		if (value !== originalValue) {
 			onChange(value);
 		}
-	}
+	};
 }
 
 export default class TextInputWithStdin extends PureComponent {
 	render() {
 		return (
 			<StdinContext.Consumer>
-				{({stdin, setRawMode}) => (
-					<TextInput {...this.props} stdin={stdin} setRawMode={setRawMode}/>
+				{({ stdin, setRawMode }) => (
+					<TextInput {...this.props} stdin={stdin} setRawMode={setRawMode} />
 				)}
 			</StdinContext.Consumer>
 		);
@@ -176,15 +212,21 @@ export default class TextInputWithStdin extends PureComponent {
 export class UncontrolledTextInput extends PureComponent {
 	state = {
 		value: ''
-	}
+	};
 
 	setValue(value) {
-		this.setState({value});
+		this.setState({ value });
 	}
 
 	setValue = this.setValue.bind(this);
 
 	render() {
-		return <TextInputWithStdin {...this.props} value={this.state.value} onChange={this.setValue}/>;
+		return (
+			<TextInputWithStdin
+				{...this.props}
+				value={this.state.value}
+				onChange={this.setValue}
+			/>
+		);
 	}
 }

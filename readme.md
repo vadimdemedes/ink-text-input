@@ -2,19 +2,17 @@
 
 > Text input component for [Ink](https://github.com/vadimdemedes/ink).
 
-
 ## Install
 
 ```
 $ npm install ink-text-input
 ```
 
-
 ## Usage
 
 ```jsx
 import React from 'react';
-import {render, Box} from 'ink';
+import { render, Box } from 'ink';
 import TextInput from 'ink-text-input';
 
 class SearchQuery extends React.Component {
@@ -31,28 +29,21 @@ class SearchQuery extends React.Component {
 	render() {
 		return (
 			<Box>
-				<Box marginRight={1}>
-					Enter your query:
-				</Box>
-
-				<TextInput
-					value={this.state.query}
-					onChange={this.handleChange}
-				/>
+				<Box marginRight={1}>Enter your query:</Box>
+				<TextInput value={this.state.query} onChange={this.handleChange} />
 			</Box>
 		);
 	}
 
 	handleChange(query) {
-		this.setState({query});
+		this.setState({ query });
 	}
 }
 
-render(<SearchQuery/>);
+render(<SearchQuery />);
 ```
 
 <img src="media/demo.gif" width="556">
-
 
 ## Props
 
@@ -89,10 +80,7 @@ Type: `string`
 Replace all chars and mask the value. Useful for password inputs.
 
 ```jsx
-<TextInput
-	value="Hello"
-	mask="*"
-/>
+<TextInput value="Hello" mask="*" />
 //=> "*****"
 ```
 
@@ -114,26 +102,23 @@ This component also exposes an [uncontrolled](https://reactjs.org/docs/uncontrol
 
 ```jsx
 import React from 'react';
-import {render, Box} from 'ink';
-import {UncontrolledTextInput} from 'ink-text-input';
+import { render, Box } from 'ink';
+import { UncontrolledTextInput } from 'ink-text-input';
 
 const SearchQuery = () => {
 	const handleSubmit = query => {
 		// Do something with query
 	};
-	
+
 	return (
 		<Box>
-			<Box marginRight={1}>
-				Enter your query:
-			</Box>
-
-			<UncontrolledTextInput onSubmit={handleSubmit}/>
+			<Box marginRight={1}>Enter your query:</Box>
+			<UncontrolledTextInput onSubmit={handleSubmit} />
 		</Box>
 	);
 };
 
-render(<SearchQuery/>);
+render(<SearchQuery />);
 ```
 
 ## License

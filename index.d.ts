@@ -54,4 +54,6 @@ export interface InkUncontrolledTextInputProps extends CommonProps {
 
 export default class InkTextInput extends React.Component<InkTextInputProps> {}
 
-export class UncontrolledTextInput extends React.Component<InkUncontrolledTextInputProps> {}
+export class UncontrolledTextInput extends React.Component<
+	InkUncontrolledTextInputProps
+> {}
