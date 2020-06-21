@@ -38,9 +38,9 @@ test('display placeholder', t => {
 });
 
 test('display value with mask', t => {
-	const {lastFrame} = render(<TextInput value="Hello" showCursor={false} mask="*" onChange={noop}/>);
+	const {lastFrame} = render(<TextInput value="Hello" mask="*" onChange={noop}/>);
 
-	t.is(lastFrame(), '*****');
+	t.is(lastFrame(), `*****${chalk.inverse(' ')}`);
 });
 
 test('accept input (controlled)', t => {

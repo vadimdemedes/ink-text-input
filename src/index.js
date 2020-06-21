@@ -45,15 +45,16 @@ class TextInput extends PureComponent {
 	isMounted = false;
 
 	render() {
-		const {value, placeholder, showCursor, focus, mask, highlightPastedText} = this.props;
+		const {value: originalValue, placeholder, showCursor, focus, mask, highlightPastedText} = this.props;
 		const {cursorOffset, cursorWidth} = this.state;
+		const value = mask ? mask.repeat(originalValue.length) : originalValue;
 		const hasValue = value.length > 0;
 		let renderedValue = value;
 		let renderedPlaceholder;
 		const cursorActualWidth = highlightPastedText ? cursorWidth : 0;
 
 		// Fake mouse cursor, because it's too inconvenient to deal with actual cursor and ansi escapes
-		if (showCursor && !mask && focus) {
+		if (showCursor && focus) {
 			renderedPlaceholder = placeholder.length > 0 ? chalk.inverse(placeholder[0]) + placeholder.slice(1) : chalk.inverse(' ');
 			renderedValue = value.length > 0 ? '' : chalk.inverse(' ');
 
@@ -71,10 +72,6 @@ class TextInput extends PureComponent {
 			if (value.length > 0 && cursorOffset === value.length) {
 				renderedValue += chalk.inverse(' ');
 			}
-		}
-
-		if (mask) {
-			renderedValue = mask.repeat(renderedValue.length);
 		}
 
 		return (
@@ -101,7 +98,7 @@ class TextInput extends PureComponent {
 	}
 
 	handleInput = data => {
-		const {value: originalValue, focus, showCursor, mask, onChange, onSubmit} = this.props;
+		const {value: originalValue, focus, showCursor, onChange, onSubmit} = this.props;
 		const {cursorOffset: originalCursorOffset} = this.state;
 
 		if (focus === false || this.isMounted === false) {
@@ -127,11 +124,11 @@ class TextInput extends PureComponent {
 		let cursorWidth = 0;
 
 		if (s === ARROW_LEFT) {
-			if (showCursor && !mask) {
+			if (showCursor) {
 				cursorOffset--;
 			}
 		} else if (s === ARROW_RIGHT) {
-			if (showCursor && !mask) {
+			if (showCursor) {
 				cursorOffset++;
 			}
 		} else if (s === BACKSPACE || s === DELETE) {
