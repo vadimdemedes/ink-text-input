@@ -1,232 +1,142 @@
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
-import { Color, StdinContext } from 'ink';
+import React, { useState } from 'react';
+import { Text, useInput } from 'ink';
 import chalk from 'chalk';
 
-const ARROW_UP = '\u001B[A';
-const ARROW_DOWN = '\u001B[B';
-const ARROW_LEFT = '\u001B[D';
-const ARROW_RIGHT = '\u001B[C';
-const ENTER = '\r';
-const CTRL_C = '\x03';
-const BACKSPACE = '\x08';
-const DELETE = '\u007F';
-const TAB = '\t';
-const SHIFT_TAB = '\u001B[Z';
-
-class TextInput extends PureComponent {
-	static propTypes = {
-		value: PropTypes.string.isRequired,
-		placeholder: PropTypes.string,
-		focus: PropTypes.bool,
-		mask: PropTypes.string,
-		highlightPastedText: PropTypes.bool,
-		showCursor: PropTypes.bool,
-		stdin: PropTypes.object.isRequired,
-		setRawMode: PropTypes.func.isRequired,
-		onChange: PropTypes.func.isRequired,
-		onSubmit: PropTypes.func
-	};
-
-	static defaultProps = {
-		placeholder: '',
-		showCursor: true,
-		focus: true,
-		mask: undefined,
-		highlightPastedText: false,
-		onSubmit: undefined
-	};
-
-	state = {
-		cursorOffset: (this.props.value || '').length,
+const TextInput = ({
+	value: originalValue,
+	placeholder = '',
+	focus = true,
+	mask,
+	highlightPastedText = false,
+	showCursor = true,
+	onChange,
+	onSubmit
+}) => {
+	const [{ cursorOffset, cursorWidth }, setState] = useState({
+		cursorOffset: (originalValue || '').length,
 		cursorWidth: 0
-	};
+	});
 
-	isMounted = false;
+	const cursorActualWidth = highlightPastedText ? cursorWidth : 0;
 
-	render() {
-		const {
-			value: originalValue,
-			placeholder,
-			showCursor,
-			focus,
-			mask,
-			highlightPastedText
-		} = this.props;
+	const value = mask ? mask.repeat(originalValue.length) : originalValue;
+	let renderedValue = value;
+	let renderedPlaceholder;
 
-		const { cursorOffset, cursorWidth } = this.state;
-		const value = mask ? mask.repeat(originalValue.length) : originalValue;
-		const hasValue = value.length > 0;
-		let renderedValue = value;
-		let renderedPlaceholder;
-		const cursorActualWidth = highlightPastedText ? cursorWidth : 0;
+	// Fake mouse cursor, because it's too inconvenient to deal with actual cursor and ansi escapes
+	if (showCursor && focus) {
+		renderedPlaceholder =
+			placeholder.length > 0
+				? chalk.inverse(placeholder[0]) + chalk.grey(placeholder.slice(1))
+				: chalk.inverse(' ');
 
-		// Fake mouse cursor, because it's too inconvenient to deal with actual cursor and ansi escapes
-		if (showCursor && focus) {
-			renderedPlaceholder =
-				placeholder.length > 0
-					? chalk.inverse(placeholder[0]) + placeholder.slice(1)
-					: chalk.inverse(' ');
+		renderedValue = value.length > 0 ? '' : chalk.inverse(' ');
 
-			renderedValue = value.length > 0 ? '' : chalk.inverse(' ');
+		let i = 0;
 
-			let i = 0;
-			for (const char of value) {
-				if (i >= cursorOffset - cursorActualWidth && i <= cursorOffset) {
-					renderedValue += chalk.inverse(char);
-				} else {
-					renderedValue += char;
+		for (const char of value) {
+			if (i >= cursorOffset - cursorActualWidth && i <= cursorOffset) {
+				renderedValue += chalk.inverse(char);
+			} else {
+				renderedValue += char;
+			}
+
+			i++;
+		}
+
+		if (value.length > 0 && cursorOffset === value.length) {
+			renderedValue += chalk.inverse(' ');
+		}
+	}
+
+	useInput(
+		(input, key) => {
+			if (
+				key.upArrow ||
+				key.downArrow ||
+				(key.ctrl && input === 'c') ||
+				key.tab ||
+				(key.shift && key.tab)
+			) {
+				return;
+			}
+
+			if (key.return) {
+				if (onSubmit) {
+					onSubmit(originalValue);
 				}
 
-				i++;
+				return;
 			}
 
-			if (value.length > 0 && cursorOffset === value.length) {
-				renderedValue += chalk.inverse(' ');
-			}
-		}
+			let nextCursorOffset = cursorOffset;
+			let nextValue = originalValue;
+			let nextCursorWidth = 0;
 
-		return (
-			<Color dim={!hasValue && placeholder}>
-				{placeholder
-					? hasValue
-						? renderedValue
-						: renderedPlaceholder
-					: renderedValue}
-			</Color>
-		);
-	}
+			if (key.leftArrow) {
+				if (showCursor) {
+					nextCursorOffset--;
+				}
+			} else if (key.rightArrow) {
+				if (showCursor) {
+					nextCursorOffset++;
+				}
+			} else if (key.backspace || key.delete) {
+				if (cursorOffset > 0) {
+					nextValue =
+						originalValue.slice(0, cursorOffset - 1) +
+						originalValue.slice(cursorOffset, originalValue.length);
 
-	componentDidMount() {
-		const { stdin, setRawMode } = this.props;
+					nextCursorOffset--;
+				}
+			} else {
+				nextValue =
+					originalValue.slice(0, cursorOffset) +
+					input +
+					originalValue.slice(cursorOffset, originalValue.length);
 
-		this.isMounted = true;
-		setRawMode(true);
-		stdin.on('data', this.handleInput);
-	}
+				nextCursorOffset += input.length;
 
-	componentWillUnmount() {
-		const { stdin, setRawMode } = this.props;
-
-		this.isMounted = false;
-		stdin.removeListener('data', this.handleInput);
-		setRawMode(false);
-	}
-
-	handleInput = data => {
-		const {
-			value: originalValue,
-			focus,
-			showCursor,
-			onChange,
-			onSubmit
-		} = this.props;
-
-		const { cursorOffset: originalCursorOffset } = this.state;
-
-		if (focus === false || this.isMounted === false) {
-			return;
-		}
-
-		const s = String(data);
-
-		if (
-			s === ARROW_UP ||
-			s === ARROW_DOWN ||
-			s === CTRL_C ||
-			s === TAB ||
-			s === SHIFT_TAB
-		) {
-			return;
-		}
-
-		if (s === ENTER) {
-			if (onSubmit) {
-				onSubmit(originalValue);
+				if (input.length > 1) {
+					nextCursorWidth = input.length;
+				}
 			}
 
-			return;
-		}
-
-		let cursorOffset = originalCursorOffset;
-		let value = originalValue;
-		let cursorWidth = 0;
-
-		if (s === ARROW_LEFT) {
-			if (showCursor) {
-				cursorOffset--;
+			if (cursorOffset < 0) {
+				nextCursorOffset = 0;
 			}
-		} else if (s === ARROW_RIGHT) {
-			if (showCursor) {
-				cursorOffset++;
+
+			if (cursorOffset > originalValue.length) {
+				nextCursorOffset = originalValue.length;
 			}
-		} else if (s === BACKSPACE || s === DELETE) {
-			if (cursorOffset > 0) {
-				value =
-					value.slice(0, cursorOffset - 1) +
-					value.slice(cursorOffset, value.length);
 
-				cursorOffset--;
+			setState({
+				cursorOffset: nextCursorOffset,
+				cursorWidth: nextCursorWidth
+			});
+
+			if (nextValue !== originalValue) {
+				onChange(nextValue);
 			}
-		} else {
-			value =
-				value.slice(0, cursorOffset) +
-				s +
-				value.slice(cursorOffset, value.length);
+		},
+		{ isActive: focus }
+	);
 
-			cursorOffset += s.length;
+	return (
+		<Text>
+			{placeholder
+				? value.length > 0
+					? renderedValue
+					: renderedPlaceholder
+				: renderedValue}
+		</Text>
+	);
+};
 
-			if (s.length > 1) {
-				cursorWidth = s.length;
-			}
-		}
+export default TextInput;
 
-		if (cursorOffset < 0) {
-			cursorOffset = 0;
-		}
+export const UncontrolledTextInput = props => {
+	const [value, setValue] = useState('');
 
-		if (cursorOffset > value.length) {
-			cursorOffset = value.length;
-		}
-
-		this.setState({ cursorOffset, cursorWidth });
-
-		if (value !== originalValue) {
-			onChange(value);
-		}
-	};
-}
-
-export default class TextInputWithStdin extends PureComponent {
-	render() {
-		return (
-			<StdinContext.Consumer>
-				{({ stdin, setRawMode }) => (
-					<TextInput {...this.props} stdin={stdin} setRawMode={setRawMode} />
-				)}
-			</StdinContext.Consumer>
-		);
-	}
-}
-
-export class UncontrolledTextInput extends PureComponent {
-	state = {
-		value: ''
-	};
-
-	setValue(value) {
-		this.setState({ value });
-	}
-
-	setValue = this.setValue.bind(this);
-
-	render() {
-		return (
-			<TextInputWithStdin
-				{...this.props}
-				value={this.state.value}
-				onChange={this.setValue}
-			/>
-		);
-	}
-}
+	return <TextInput {...props} value={value} onChange={setValue} />;
+};

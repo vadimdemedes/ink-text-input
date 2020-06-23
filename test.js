@@ -3,6 +3,7 @@ import test from 'ava';
 import chalk from 'chalk';
 import { render } from 'ink-testing-library';
 import sinon from 'sinon';
+import delay from 'delay';
 import TextInput, { UncontrolledTextInput } from '.';
 
 const noop = () => {};
@@ -38,7 +39,7 @@ test('display placeholder', t => {
 		<TextInput value="" placeholder="Placeholder" onChange={noop} />
 	);
 
-	t.is(lastFrame(), chalk.dim(`${chalk.inverse('P')}laceholder`));
+	t.is(lastFrame(), chalk.inverse('P') + chalk.grey('laceholder'));
 });
 
 test('display value with mask', t => {
@@ -49,7 +50,7 @@ test('display value with mask', t => {
 	t.is(lastFrame(), `*****${chalk.inverse(' ')}`);
 });
 
-test('accept input (controlled)', t => {
+test('accept input (controlled)', async t => {
 	const StatefulTextInput = () => {
 		const [value, setValue] = useState('');
 
@@ -59,19 +60,23 @@ test('accept input (controlled)', t => {
 	const { stdin, lastFrame } = render(<StatefulTextInput />);
 
 	t.is(lastFrame(), CURSOR);
+	await delay(100);
 	stdin.write('X');
+	await delay(100);
 	t.is(lastFrame(), `X${CURSOR}`);
 });
 
-test('accept input (uncontrolled)', t => {
+test('accept input (uncontrolled)', async t => {
 	const { stdin, lastFrame } = render(<UncontrolledTextInput />);
 
 	t.is(lastFrame(), CURSOR);
+	await delay(100);
 	stdin.write('X');
+	await delay(100);
 	t.is(lastFrame(), `X${CURSOR}`);
 });
 
-test('ignore input when not in focus', t => {
+test('ignore input when not in focus', async t => {
 	const StatefulTextInput = () => {
 		const [value, setValue] = useState('');
 
@@ -81,11 +86,13 @@ test('ignore input when not in focus', t => {
 	const { stdin, frames, lastFrame } = render(<StatefulTextInput />);
 
 	t.is(lastFrame(), '');
+	await delay(100);
 	stdin.write('X');
+	await delay(100);
 	t.is(frames.length, 1);
 });
 
-test('ignore input for Tab and Shift+Tab keys', t => {
+test('ignore input for Tab and Shift+Tab keys', async t => {
 	const Test = () => {
 		const [value, setValue] = useState('');
 
@@ -94,13 +101,16 @@ test('ignore input for Tab and Shift+Tab keys', t => {
 
 	const { stdin, lastFrame } = render(<Test />);
 
+	await delay(100);
 	stdin.write('\t');
+	await delay(100);
 	t.is(lastFrame(), CURSOR);
 	stdin.write('\u001B[Z');
+	await delay(100);
 	t.is(lastFrame(), CURSOR);
 });
 
-test('onSubmit', t => {
+test('onSubmit', async t => {
 	const onSubmit = sinon.spy();
 
 	const StatefulTextInput = () => {
@@ -113,15 +123,18 @@ test('onSubmit', t => {
 
 	t.is(lastFrame(), CURSOR);
 
+	await delay(100);
 	stdin.write('X');
+	await delay(100);
 	stdin.write(ENTER);
+	await delay(100);
 
 	t.is(lastFrame(), `X${CURSOR}`);
 	t.true(onSubmit.calledWith('X'));
 	t.true(onSubmit.calledOnce);
 });
 
-test('paste and move cursor', t => {
+test('paste and move cursor', async t => {
 	const StatefulTextInput = () => {
 		const [value, setValue] = useState('');
 
@@ -138,21 +151,27 @@ test('paste and move cursor', t => {
 			.join('');
 	};
 
+	await delay(100);
 	stdin.write('A');
+	await delay(100);
 	stdin.write('B');
+	await delay(100);
 	t.is(lastFrame(), `AB${CURSOR}`);
 
 	stdin.write(ARROW_LEFT);
+	await delay(100);
 	t.is(lastFrame(), `A${chalk.inverse('B')}`);
 
 	stdin.write('Hello World');
+	await delay(100);
 	t.is(lastFrame(), `A${inverse('Hello WorldB')}`);
 
 	stdin.write(ARROW_RIGHT);
+	await delay(100);
 	t.is(lastFrame(), `AHello WorldB${CURSOR}`);
 });
 
-test('delete at the beginning of text', t => {
+test('delete at the beginning of text', async t => {
 	const Test = () => {
 		const [value, setValue] = useState('');
 
@@ -161,15 +180,24 @@ test('delete at the beginning of text', t => {
 
 	const { stdin, lastFrame } = render(<Test />);
 
+	await delay(100);
 	stdin.write('T');
+	await delay(100);
 	stdin.write('e');
+	await delay(100);
 	stdin.write('s');
+	await delay(100);
 	stdin.write('t');
 	stdin.write(ARROW_LEFT);
+	await delay(100);
 	stdin.write(ARROW_LEFT);
+	await delay(100);
 	stdin.write(ARROW_LEFT);
+	await delay(100);
 	stdin.write(ARROW_LEFT);
+	await delay(100);
 	stdin.write(DELETE);
+	await delay(100);
 
 	t.is(lastFrame(), `${chalk.inverse('T')}est`);
 });
