@@ -67,7 +67,7 @@ const TextInput: FC<Props> = ({
 
 	const value = mask ? mask.repeat(originalValue.length) : originalValue;
 	let renderedValue = value;
-	let renderedPlaceholder;
+	let renderedPlaceholder = placeholder ? chalk.grey(placeholder) : undefined;
 
 	// Fake mouse cursor, because it's too inconvenient to deal with actual cursor and ansi escapes
 	if (showCursor && focus) {

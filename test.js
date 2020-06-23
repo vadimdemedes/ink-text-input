@@ -42,6 +42,19 @@ test('display placeholder', t => {
 	t.is(lastFrame(), chalk.inverse('P') + chalk.grey('laceholder'));
 });
 
+test('display placeholder when cursor is hidden', t => {
+	const { lastFrame } = render(
+		<TextInput
+			value=""
+			placeholder="Placeholder"
+			showCursor={false}
+			onChange={noop}
+		/>
+	);
+
+	t.is(lastFrame(), chalk.grey('Placeholder'));
+});
+
 test('display value with mask', t => {
 	const { lastFrame } = render(
 		<TextInput value="Hello" mask="*" onChange={noop} />
