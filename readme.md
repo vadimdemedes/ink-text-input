@@ -2,6 +2,8 @@
 
 > Text input component for [Ink](https://github.com/vadimdemedes/ink).
 
+Looking for a version compatible with Ink 2.x? Check out [previous release](https://github.com/vadimdemedes/ink-text-input/tree/v3.3.0).
+
 ## Install
 
 ```
@@ -11,34 +13,23 @@ $ npm install ink-text-input
 ## Usage
 
 ```jsx
-import React from 'react';
-import { render, Box } from 'ink';
+import React, { useState } from 'react';
+import { render, Box, Text } from 'ink';
 import TextInput from 'ink-text-input';
 
-class SearchQuery extends React.Component {
-	constructor() {
-		super();
+const SearchQuery = () => {
+	const [query, setQuery] = useState('');
 
-		this.state = {
-			query: ''
-		};
-
-		this.handleChange = this.handleChange.bind(this);
-	}
-
-	render() {
-		return (
-			<Box>
-				<Box marginRight={1}>Enter your query:</Box>
-				<TextInput value={this.state.query} onChange={this.handleChange} />
+	return (
+		<Box>
+			<Box marginRight={1}>
+				<Text>Enter your query:</Text>
 			</Box>
-		);
-	}
 
-	handleChange(query) {
-		this.setState({ query });
-	}
-}
+			<TextInput value={query} onChange={setQuery} />
+		</Box>
+	);
+};
 
 render(<SearchQuery />);
 ```
@@ -61,14 +52,14 @@ Text to display when `value` is empty.
 
 ### showCursor
 
-Type: `boolean`<br>
+Type: `boolean`\
 Default: `true`
 
 Whether to show cursor and allow navigation inside text input with arrow keys.
 
 ### highlightPastedText
 
-Type: `boolean`<br>
+Type: `boolean`\
 Default: `false`
 
 Highlight pasted text.
@@ -102,7 +93,7 @@ This component also exposes an [uncontrolled](https://reactjs.org/docs/uncontrol
 
 ```jsx
 import React from 'react';
-import { render, Box } from 'ink';
+import { render, Box, Text } from 'ink';
 import { UncontrolledTextInput } from 'ink-text-input';
 
 const SearchQuery = () => {
@@ -112,7 +103,10 @@ const SearchQuery = () => {
 
 	return (
 		<Box>
-			<Box marginRight={1}>Enter your query:</Box>
+			<Box marginRight={1}>
+				<Text>Enter your query:</Text>
+			</Box>
+
 			<UncontrolledTextInput onSubmit={handleSubmit} />
 		</Box>
 	);
@@ -120,7 +114,3 @@ const SearchQuery = () => {
 
 render(<SearchQuery />);
 ```
-
-## License
-
-MIT © [Vadim Demedes](https://github.com/vadimdemedes)
