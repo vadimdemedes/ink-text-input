@@ -144,8 +144,8 @@ test('paste and move cursor', async t => {
 	const { stdin, lastFrame } = render(<StatefulTextInput />);
 
 	// Need this to invert each char separately
-	const inverse = str => {
-		return str
+	const inverse = string => {
+		return string
 			.split('')
 			.map(c => chalk.inverse(c))
 			.join('');

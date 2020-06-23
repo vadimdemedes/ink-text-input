@@ -1,8 +1,54 @@
-import React, { useState } from 'react';
+import * as React from 'react';
+import { useState } from 'react';
+import type { FC } from 'react';
 import { Text, useInput } from 'ink';
-import chalk from 'chalk';
+import chalk = require('chalk');
+import type { Except } from 'type-fest';
 
-const TextInput = ({
+interface Props {
+	/**
+	 * Text to display when `value` is empty.
+	 */
+	placeholder?: string;
+
+	/**
+	 * Listen to user's input. Useful in case there are multiple input components
+	 * at the same time and input must be "routed" to a specific component.
+	 */
+	focus?: boolean;
+
+	/**
+	 * Replace all chars and mask the value. Useful for password inputs.
+	 */
+	mask?: string;
+
+	/**
+	 * Whether to show cursor and allow navigation inside text input with arrow keys.
+	 */
+	showCursor?: boolean;
+
+	/**
+	 * Highlight pasted text
+	 */
+	highlightPastedText?: boolean;
+
+	/**
+	 * Value to display in a text input.
+	 */
+	value: string;
+
+	/**
+	 * Function to call when value updates.
+	 */
+	onChange: (value: string) => void;
+
+	/**
+	 * Function to call when `Enter` is pressed, where first argument is a value of the input.
+	 */
+	onSubmit?: (value: string) => void;
+}
+
+const TextInput: FC<Props> = ({
 	value: originalValue,
 	placeholder = '',
 	focus = true,
@@ -135,7 +181,10 @@ const TextInput = ({
 
 export default TextInput;
 
-export const UncontrolledTextInput = props => {
+export const UncontrolledTextInput: FC<Except<
+	Props,
+	'value' | 'onChange'
+>> = props => {
 	const [value, setValue] = useState('');
 
 	return <TextInput {...props} value={value} onChange={setValue} />;

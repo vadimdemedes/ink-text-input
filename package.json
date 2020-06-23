@@ -10,19 +10,18 @@
 		"url": "github.com/vadimdemedes"
 	},
 	"main": "build",
+	"types": "build/index.d.ts",
 	"engines": {
 		"node": ">=10"
 	},
 	"scripts": {
-		"test": "xo && FORCE_COLOR=1 ava && npm run typecheck",
-		"build": "babel src --out-dir=build",
-		"prepare": "npm run build",
-		"pretest": "npm run build",
-		"typecheck": "tsc --noEmit --jsx react index.test-d.tsx"
+		"test": "tsc --noEmit && xo && FORCE_COLOR=1 ava",
+		"build": "tsc",
+		"prepare": "tsc",
+		"pretest": "tsc"
 	},
 	"files": [
-		"build",
-		"index.d.ts"
+		"build"
 	],
 	"keywords": [
 		"ink",
@@ -37,20 +36,20 @@
 		"query"
 	],
 	"dependencies": {
-		"chalk": "^3.0.0"
+		"chalk": "^4.1.0",
+		"type-fest": "^0.15.1"
 	},
 	"devDependencies": {
-		"@babel/cli": "^7.1.2",
-		"@babel/core": "^7.1.2",
-		"@babel/plugin-proposal-class-properties": "^7.1.0",
-		"@babel/preset-react": "^7.0.0",
+		"@ava/babel": "^1.0.1",
+		"@babel/preset-react": "^7.10.1",
+		"@sindresorhus/tsconfig": "^0.7.0",
 		"@types/react": "^16.8.8",
 		"@vdemedes/prettier-config": "^1.0.0",
-		"ava": "^1.3.1",
-		"babel-eslint": "^10.0.1",
+		"ava": "^3.9.0",
 		"delay": "^4.3.0",
-		"eslint-config-xo-react": "^0.17.0",
-		"eslint-plugin-react": "^7.11.1",
+		"eslint-config-xo-react": "^0.23.0",
+		"eslint-plugin-react": "^7.20.0",
+		"eslint-plugin-react-hooks": "^4.0.4",
 		"husky": "^4.2.5",
 		"ink": "^3.0.0-3",
 		"ink-testing-library": "^2.0.0",
@@ -58,26 +57,28 @@
 		"pretty-quick": "^2.0.1",
 		"react": "^16.5.2",
 		"sinon": "^7.2.7",
-		"typescript": "^3.3.3333",
-		"xo": "^0.24.0"
+		"typescript": "^3.9.5",
+		"xo": "^0.32.0"
 	},
 	"peerDependencies": {
 		"ink": "^2.0.0",
 		"react": "^16.5.2"
 	},
-	"babel": {
-		"plugins": [
-			"@babel/plugin-proposal-class-properties"
-		],
-		"presets": [
-			"@ava/stage-4",
-			"@babel/preset-react"
-		]
+	"ava": {
+		"babel": {
+			"testOptions": {
+				"presets": [
+					"@babel/preset-react"
+				]
+			}
+		}
 	},
 	"xo": {
-		"parser": "babel-eslint",
 		"extends": [
 			"xo-react"
+		],
+		"plugins": [
+			"react"
 		],
 		"prettier": true,
 		"rules": {
