@@ -2,7 +2,7 @@
 
 > Text input component for [Ink](https://github.com/vadimdemedes/ink).
 
-Looking for a version compatible with Ink 2.x? Check out [previous release](https://github.com/vadimdemedes/ink-text-input/tree/v3.3.0).
+Looking for a version compatible with Ink 2.x? Check out [this release](https://github.com/vadimdemedes/ink-text-input/tree/v3.3.0).
 
 ## Install
 
