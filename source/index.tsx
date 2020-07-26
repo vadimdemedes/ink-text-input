@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { useState } from 'react';
-import type { FC } from 'react';
-import { Text, useInput } from 'ink';
+import {useState} from 'react';
+import type {FC} from 'react';
+import {Text, useInput} from 'ink';
 import chalk = require('chalk');
-import type { Except } from 'type-fest';
+import type {Except} from 'type-fest';
 
 interface Props {
 	/**
@@ -58,7 +58,7 @@ const TextInput: FC<Props> = ({
 	onChange,
 	onSubmit
 }) => {
-	const [{ cursorOffset, cursorWidth }, setState] = useState({
+	const [{cursorOffset, cursorWidth}, setState] = useState({
 		cursorOffset: (originalValue || '').length,
 		cursorWidth: 0
 	});
@@ -165,7 +165,7 @@ const TextInput: FC<Props> = ({
 				onChange(nextValue);
 			}
 		},
-		{ isActive: focus }
+		{isActive: focus}
 	);
 
 	return (

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import test from 'ava';
 import chalk from 'chalk';
-import { render } from 'ink-testing-library';
+import {render} from 'ink-testing-library';
 import sinon from 'sinon';
 import delay from 'delay';
-import TextInput, { UncontrolledTextInput } from '.';
+import TextInput, {UncontrolledTextInput} from '.';
 
 const noop = () => {};
 
@@ -15,13 +15,13 @@ const ARROW_RIGHT = '\u001B[C';
 const DELETE = '\u007F';
 
 test('default state', t => {
-	const { lastFrame } = render(<TextInput value="" onChange={noop} />);
+	const {lastFrame} = render(<TextInput value="" onChange={noop} />);
 
 	t.is(lastFrame(), CURSOR);
 });
 
 test('display value', t => {
-	const { lastFrame } = render(
+	const {lastFrame} = render(
 		<TextInput value="Hello" showCursor={false} onChange={noop} />
 	);
 
@@ -29,13 +29,13 @@ test('display value', t => {
 });
 
 test('display value with cursor', t => {
-	const { lastFrame } = render(<TextInput value="Hello" onChange={noop} />);
+	const {lastFrame} = render(<TextInput value="Hello" onChange={noop} />);
 
 	t.is(lastFrame(), `Hello${CURSOR}`);
 });
 
 test('display placeholder', t => {
-	const { lastFrame } = render(
+	const {lastFrame} = render(
 		<TextInput value="" placeholder="Placeholder" onChange={noop} />
 	);
 
@@ -43,7 +43,7 @@ test('display placeholder', t => {
 });
 
 test('display placeholder when cursor is hidden', t => {
-	const { lastFrame } = render(
+	const {lastFrame} = render(
 		<TextInput
 			value=""
 			placeholder="Placeholder"
@@ -56,7 +56,7 @@ test('display placeholder when cursor is hidden', t => {
 });
 
 test('display value with mask', t => {
-	const { lastFrame } = render(
+	const {lastFrame} = render(
 		<TextInput value="Hello" mask="*" onChange={noop} />
 	);
 
@@ -70,7 +70,7 @@ test('accept input (controlled)', async t => {
 		return <TextInput value={value} onChange={setValue} />;
 	};
 
-	const { stdin, lastFrame } = render(<StatefulTextInput />);
+	const {stdin, lastFrame} = render(<StatefulTextInput />);
 
 	t.is(lastFrame(), CURSOR);
 	await delay(100);
@@ -80,7 +80,7 @@ test('accept input (controlled)', async t => {
 });
 
 test('accept input (uncontrolled)', async t => {
-	const { stdin, lastFrame } = render(<UncontrolledTextInput />);
+	const {stdin, lastFrame} = render(<UncontrolledTextInput />);
 
 	t.is(lastFrame(), CURSOR);
 	await delay(100);
@@ -96,7 +96,7 @@ test('ignore input when not in focus', async t => {
 		return <TextInput focus={false} value={value} onChange={setValue} />;
 	};
 
-	const { stdin, frames, lastFrame } = render(<StatefulTextInput />);
+	const {stdin, frames, lastFrame} = render(<StatefulTextInput />);
 
 	t.is(lastFrame(), '');
 	await delay(100);
@@ -112,7 +112,7 @@ test('ignore input for Tab and Shift+Tab keys', async t => {
 		return <TextInput value={value} onChange={setValue} />;
 	};
 
-	const { stdin, lastFrame } = render(<Test />);
+	const {stdin, lastFrame} = render(<Test />);
 
 	await delay(100);
 	stdin.write('\t');
@@ -132,7 +132,7 @@ test('onSubmit', async t => {
 		return <TextInput value={value} onChange={setValue} onSubmit={onSubmit} />;
 	};
 
-	const { stdin, lastFrame } = render(<StatefulTextInput />);
+	const {stdin, lastFrame} = render(<StatefulTextInput />);
 
 	t.is(lastFrame(), CURSOR);
 
@@ -154,7 +154,7 @@ test('paste and move cursor', async t => {
 		return <TextInput highlightPastedText value={value} onChange={setValue} />;
 	};
 
-	const { stdin, lastFrame } = render(<StatefulTextInput />);
+	const {stdin, lastFrame} = render(<StatefulTextInput />);
 
 	// Need this to invert each char separately
 	const inverse = string => {
@@ -191,7 +191,7 @@ test('delete at the beginning of text', async t => {
 		return <TextInput value={value} onChange={setValue} />;
 	};
 
-	const { stdin, lastFrame } = render(<Test />);
+	const {stdin, lastFrame} = render(<Test />);
 
 	await delay(100);
 	stdin.write('T');
