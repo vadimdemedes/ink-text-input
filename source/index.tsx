@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import type {FC} from 'react';
 import {Text, useInput} from 'ink';
 import chalk = require('chalk');
@@ -62,6 +62,25 @@ const TextInput: FC<Props> = ({
 		cursorOffset: (originalValue || '').length,
 		cursorWidth: 0
 	});
+
+	useEffect(() => {
+		setState(previousState => {
+			if (!focus || !showCursor) {
+				return previousState;
+			}
+
+			const newValue = originalValue || '';
+
+			if (previousState.cursorOffset > newValue.length - 1) {
+				return {
+					cursorOffset: newValue.length,
+					cursorWidth: 0
+				};
+			}
+
+			return previousState;
+		});
+	}, [originalValue, focus, showCursor]);
 
 	const cursorActualWidth = highlightPastedText ? cursorWidth : 0;
 
