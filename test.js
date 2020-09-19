@@ -214,3 +214,30 @@ test('delete at the beginning of text', async t => {
 
 	t.is(lastFrame(), `${chalk.inverse('T')}est`);
 });
+
+test('adjust cursor when text is shorter than last value', async t => {
+	const Test = () => {
+		const [value, setValue] = useState('');
+		const submit = () => setValue('');
+
+		return <TextInput value={value} onChange={setValue} onSubmit={submit} />;
+	};
+
+	const {stdin, lastFrame} = render(<Test />);
+
+	await delay(100);
+	stdin.write('A');
+	await delay(100);
+	stdin.write('B');
+	await delay(100);
+	t.is(lastFrame(), `AB${chalk.inverse(' ')}`);
+	stdin.write('\r');
+	await delay(100);
+	t.is(lastFrame(), chalk.inverse(' '));
+	stdin.write('A');
+	await delay(100);
+	t.is(lastFrame(), `A${chalk.inverse(' ')}`);
+	stdin.write('B');
+	await delay(100);
+	t.is(lastFrame(), `AB${chalk.inverse(' ')}`);
+});
