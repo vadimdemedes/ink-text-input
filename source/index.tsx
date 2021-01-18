@@ -121,7 +121,8 @@ const TextInput: FC<Props> = ({
 				key.downArrow ||
 				(key.ctrl && input === 'c') ||
 				key.tab ||
-				(key.shift && key.tab)
+				(key.shift && key.tab) ||
+				key.escape
 			) {
 				return;
 			}
