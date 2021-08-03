@@ -199,6 +199,7 @@ const TextInput: FC<Props> = ({
 };
 
 export default TextInput;
+export {TextInput};
 
 export const UncontrolledTextInput: FC<Except<
 	Props,
