@@ -123,6 +123,34 @@ test('ignore input for Tab and Shift+Tab keys', async t => {
 	t.is(lastFrame(), CURSOR);
 });
 
+test('set value to placeholder with tabComplete', async t => {
+	const Test = () => {
+		const [value, setValue] = useState('');
+
+		return (
+			<TextInput
+				tabComplete
+				placeholder="test"
+				value={value}
+				onChange={setValue}
+			/>
+		);
+	};
+
+	const {stdin, lastFrame} = render(<Test />);
+
+	await delay(100);
+	stdin.write('\t');
+	await delay(100);
+	t.is(lastFrame(), `test${CURSOR}`);
+	stdin.write('\t');
+	await delay(100);
+	t.is(lastFrame(), `test${CURSOR}`);
+	stdin.write('\u001B[Z');
+	await delay(100);
+	t.is(lastFrame(), `test${CURSOR}`);
+});
+
 test('onSubmit', async t => {
 	const onSubmit = sinon.spy();
 

@@ -33,6 +33,11 @@ interface Props {
 	highlightPastedText?: boolean;
 
 	/**
+	 * Allow tab key to insert placeholder as the value.
+	 */
+	tabComplete?: boolean;
+
+	/**
 	 * Value to display in a text input.
 	 */
 	value: string;
@@ -55,6 +60,7 @@ const TextInput: FC<Props> = ({
 	mask,
 	highlightPastedText = false,
 	showCursor = true,
+	tabComplete = false,
 	onChange,
 	onSubmit
 }) => {
@@ -116,14 +122,18 @@ const TextInput: FC<Props> = ({
 
 	useInput(
 		(input, key) => {
-			if (
-				key.upArrow ||
-				key.downArrow ||
-				(key.ctrl && input === 'c') ||
-				key.tab ||
-				(key.shift && key.tab)
-			) {
+			if (key.upArrow || key.downArrow || (key.ctrl && input === 'c')) {
 				return;
+			}
+
+			if (key.tab || (key.shift && key.tab)) {
+				if (tabComplete) {
+					if (value === placeholder) {
+						return;
+					}
+				} else {
+					return;
+				}
 			}
 
 			if (key.return) {
@@ -153,6 +163,11 @@ const TextInput: FC<Props> = ({
 						originalValue.slice(cursorOffset, originalValue.length);
 
 					nextCursorOffset--;
+				}
+			} else if (key.tab) {
+				if (tabComplete) {
+					nextValue = placeholder;
+					nextCursorOffset += nextValue.length;
 				}
 			} else {
 				nextValue =
@@ -200,11 +215,9 @@ const TextInput: FC<Props> = ({
 
 export default TextInput;
 
-export const UncontrolledTextInput: FC<Except<
-	Props,
-	'value' | 'onChange'
->> = props => {
-	const [value, setValue] = useState('');
+export const UncontrolledTextInput: FC<Except<Props, 'value' | 'onChange'>> =
+	props => {
+		const [value, setValue] = useState('');
 
-	return <TextInput {...props} value={value} onChange={setValue} />;
-};
+		return <TextInput {...props} value={value} onChange={setValue} />;
+	};
