@@ -149,6 +149,12 @@ test('set value to placeholder with tabComplete', async t => {
 	stdin.write('\u001B[Z');
 	await delay(100);
 	t.is(lastFrame(), `test${CURSOR}`);
+	stdin.write(DELETE);
+	await delay(100);
+	t.is(lastFrame(), `tes${CURSOR}`);
+	stdin.write('\t');
+	await delay(100);
+	t.is(lastFrame(), `tes${CURSOR}`);
 });
 
 test('onSubmit', async t => {

@@ -165,7 +165,7 @@ const TextInput: FC<Props> = ({
 					nextCursorOffset--;
 				}
 			} else if (key.tab) {
-				if (tabComplete) {
+				if (tabComplete && originalValue.length === 0) {
 					nextValue = placeholder;
 					nextCursorOffset += nextValue.length;
 				}
