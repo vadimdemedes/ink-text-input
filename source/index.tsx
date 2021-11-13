@@ -200,11 +200,9 @@ const TextInput: FC<Props> = ({
 
 export default TextInput;
 
-export const UncontrolledTextInput: FC<Except<
-	Props,
-	'value' | 'onChange'
->> = props => {
-	const [value, setValue] = useState('');
+export const UncontrolledTextInput: FC<Except<Props, 'value' | 'onChange'>> =
+	props => {
+		const [value, setValue] = useState('');
 
-	return <TextInput {...props} value={value} onChange={setValue} />;
-};
+		return <TextInput {...props} value={value} onChange={setValue} />;
+	};
