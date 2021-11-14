@@ -13,8 +13,8 @@ $ npm install ink-text-input
 ## Usage
 
 ```jsx
-import React, { useState } from 'react';
-import { render, Box, Text } from 'ink';
+import React, {useState} from 'react';
+import {render, Box, Text} from 'ink';
 import TextInput from 'ink-text-input';
 
 const SearchQuery = () => {
@@ -75,6 +75,12 @@ Replace all chars and mask the value. Useful for password inputs.
 //=> "*****"
 ```
 
+### tabComplete
+
+Type: `boolean`
+
+Allow tab to complete the input with the placeholder value. Good for defaults.
+
 ### onChange
 
 Type: `Function`
@@ -93,8 +99,8 @@ This component also exposes an [uncontrolled](https://reactjs.org/docs/uncontrol
 
 ```jsx
 import React from 'react';
-import { render, Box, Text } from 'ink';
-import { UncontrolledTextInput } from 'ink-text-input';
+import {render, Box, Text} from 'ink';
+import {UncontrolledTextInput} from 'ink-text-input';
 
 const SearchQuery = () => {
 	const handleSubmit = query => {
