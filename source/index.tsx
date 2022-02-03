@@ -200,9 +200,18 @@ const TextInput: FC<Props> = ({
 
 export default TextInput;
 
-export const UncontrolledTextInput: FC<Except<Props, 'value' | 'onChange'>> =
-	props => {
-		const [value, setValue] = useState('');
+interface UncontrolledProps extends Except<Props, 'value' | 'onChange'> {
+	/**
+	 * Initial value.
+	 */
+	initialValue?: string;
+}
 
-		return <TextInput {...props} value={value} onChange={setValue} />;
-	};
+export const UncontrolledTextInput: FC<UncontrolledProps> = ({
+	initialValue = '',
+	...props
+}) => {
+	const [value, setValue] = useState(initialValue);
+
+	return <TextInput {...props} value={value} onChange={setValue} />;
+};

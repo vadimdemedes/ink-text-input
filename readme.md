@@ -97,6 +97,7 @@ Function to call when `Enter` is pressed, where first argument is a value of the
 ## Uncontrolled usage
 
 This component also exposes an [uncontrolled](https://reactjs.org/docs/uncontrolled-components.html) version, which handles `value` changes for you. To receive the final input value, use `onSubmit` prop.
+Initial value can be specified via `initialValue` prop, which is supported only in `UncontrolledTextInput` component.
 
 ```jsx
 import React from 'react';
