@@ -89,6 +89,16 @@ test('accept input (uncontrolled)', async t => {
 	t.is(lastFrame(), `X${CURSOR}`);
 });
 
+test('initial value (uncontrolled)', async t => {
+	const {stdin, lastFrame} = render(<UncontrolledTextInput initialValue="Y" />);
+
+	t.is(lastFrame(), `Y${CURSOR}`);
+	await delay(100);
+	stdin.write('X');
+	await delay(100);
+	t.is(lastFrame(), `YX${CURSOR}`);
+});
+
 test('ignore input when not in focus', async t => {
 	const StatefulTextInput = () => {
 		const [value, setValue] = useState('');
