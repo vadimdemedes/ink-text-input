@@ -13,8 +13,8 @@ $ npm install ink-text-input
 ## Usage
 
 ```jsx
-import React, { useState } from 'react';
-import { render, Box, Text } from 'ink';
+import React, {useState} from 'react';
+import {render, Box, Text} from 'ink';
 import TextInput from 'ink-text-input';
 
 const SearchQuery = () => {
@@ -49,6 +49,13 @@ Value to display in a text input.
 Type: `string`
 
 Text to display when `value` is empty.
+
+### focus
+
+Type: `boolean` \
+Default: `true`
+
+Listen to user's input. Useful in case there are multiple input components at the same time and input must be "routed" to a specific component.
 
 ### showCursor
 
@@ -93,8 +100,8 @@ This component also exposes an [uncontrolled](https://reactjs.org/docs/uncontrol
 
 ```jsx
 import React from 'react';
-import { render, Box, Text } from 'ink';
-import { UncontrolledTextInput } from 'ink-text-input';
+import {render, Box, Text} from 'ink';
+import {UncontrolledTextInput} from 'ink-text-input';
 
 const SearchQuery = () => {
 	const handleSubmit = query => {
