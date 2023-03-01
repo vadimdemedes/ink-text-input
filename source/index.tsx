@@ -1,11 +1,9 @@
-import * as React from 'react';
-import {useState, useEffect} from 'react';
-import type {FC} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Text, useInput} from 'ink';
-import chalk = require('chalk');
+import chalk from 'chalk';
 import type {Except} from 'type-fest';
 
-interface Props {
+type Props = {
 	/**
 	 * Text to display when `value` is empty.
 	 */
@@ -15,7 +13,7 @@ interface Props {
 	 * Listen to user's input. Useful in case there are multiple input components
 	 * at the same time and input must be "routed" to a specific component.
 	 */
-	focus?: boolean;
+	focus?: boolean; // eslint-disable-line react/boolean-prop-naming
 
 	/**
 	 * Replace all chars and mask the value. Useful for password inputs.
@@ -25,12 +23,12 @@ interface Props {
 	/**
 	 * Whether to show cursor and allow navigation inside text input with arrow keys.
 	 */
-	showCursor?: boolean;
+	showCursor?: boolean; // eslint-disable-line react/boolean-prop-naming
 
 	/**
 	 * Highlight pasted text
 	 */
-	highlightPastedText?: boolean;
+	highlightPastedText?: boolean; // eslint-disable-line react/boolean-prop-naming
 
 	/**
 	 * Value to display in a text input.
@@ -46,9 +44,9 @@ interface Props {
 	 * Function to call when `Enter` is pressed, where first argument is a value of the input.
 	 */
 	onSubmit?: (value: string) => void;
-}
+};
 
-const TextInput: FC<Props> = ({
+function TextInput({
 	value: originalValue,
 	placeholder = '',
 	focus = true,
@@ -57,11 +55,13 @@ const TextInput: FC<Props> = ({
 	showCursor = true,
 	onChange,
 	onSubmit
-}) => {
-	const [{cursorOffset, cursorWidth}, setState] = useState({
+}: Props) {
+	const [state, setState] = useState({
 		cursorOffset: (originalValue || '').length,
 		cursorWidth: 0
 	});
+
+	const {cursorOffset, cursorWidth} = state;
 
 	useEffect(() => {
 		setState(previousState => {
@@ -100,11 +100,10 @@ const TextInput: FC<Props> = ({
 		let i = 0;
 
 		for (const char of value) {
-			if (i >= cursorOffset - cursorActualWidth && i <= cursorOffset) {
-				renderedValue += chalk.inverse(char);
-			} else {
-				renderedValue += char;
-			}
+			renderedValue +=
+				i >= cursorOffset - cursorActualWidth && i <= cursorOffset
+					? chalk.inverse(char)
+					: char;
 
 			i++;
 		}
@@ -196,22 +195,22 @@ const TextInput: FC<Props> = ({
 				: renderedValue}
 		</Text>
 	);
-};
+}
 
 export default TextInput;
 
-interface UncontrolledProps extends Except<Props, 'value' | 'onChange'> {
+type UncontrolledProps = {
 	/**
 	 * Initial value.
 	 */
 	initialValue?: string;
-}
+} & Except<Props, 'value' | 'onChange'>;
 
-export const UncontrolledTextInput: FC<UncontrolledProps> = ({
+export function UncontrolledTextInput({
 	initialValue = '',
 	...props
-}) => {
+}: UncontrolledProps) {
 	const [value, setValue] = useState(initialValue);
 
 	return <TextInput {...props} value={value} onChange={setValue} />;
-};
+}
