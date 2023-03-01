@@ -1,6 +1,6 @@
 {
 	"name": "ink-text-input",
-	"version": "4.0.3",
+	"version": "5.0.0",
 	"description": "Text input component for Ink",
 	"license": "MIT",
 	"repository": "vadimdemedes/ink-text-input",
