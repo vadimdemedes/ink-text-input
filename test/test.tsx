@@ -2,16 +2,23 @@ import React, {useState} from 'react';
 import test from 'ava';
 import chalk from 'chalk';
 import {render} from 'ink-testing-library';
-import sinon from 'sinon';
+import {spy} from 'sinon';
 import delay from 'delay';
-import TextInput, {UncontrolledTextInput} from '.';
+import TextInput, {UncontrolledTextInput} from '../source/index.js';
 
-const noop = () => {};
+const noop = () => {
+	/* */
+};
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const CURSOR = chalk.inverse(' ');
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const ENTER = '\r';
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const ARROW_LEFT = '\u001B[D';
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const ARROW_RIGHT = '\u001B[C';
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const DELETE = '\u007F';
 
 test('default state', t => {
@@ -64,11 +71,11 @@ test('display value with mask', t => {
 });
 
 test('accept input (controlled)', async t => {
-	const StatefulTextInput = () => {
+	function StatefulTextInput() {
 		const [value, setValue] = useState('');
 
 		return <TextInput value={value} onChange={setValue} />;
-	};
+	}
 
 	const {stdin, lastFrame} = render(<StatefulTextInput />);
 
@@ -100,11 +107,11 @@ test('initial value (uncontrolled)', async t => {
 });
 
 test('ignore input when not in focus', async t => {
-	const StatefulTextInput = () => {
+	function StatefulTextInput() {
 		const [value, setValue] = useState('');
 
 		return <TextInput focus={false} value={value} onChange={setValue} />;
-	};
+	}
 
 	const {stdin, frames, lastFrame} = render(<StatefulTextInput />);
 
@@ -116,11 +123,11 @@ test('ignore input when not in focus', async t => {
 });
 
 test('ignore input for Tab and Shift+Tab keys', async t => {
-	const Test = () => {
+	function Test() {
 		const [value, setValue] = useState('');
 
 		return <TextInput value={value} onChange={setValue} />;
-	};
+	}
 
 	const {stdin, lastFrame} = render(<Test />);
 
@@ -134,13 +141,13 @@ test('ignore input for Tab and Shift+Tab keys', async t => {
 });
 
 test('onSubmit', async t => {
-	const onSubmit = sinon.spy();
+	const onSubmit = spy();
 
-	const StatefulTextInput = () => {
+	function StatefulTextInput() {
 		const [value, setValue] = useState('');
 
 		return <TextInput value={value} onChange={setValue} onSubmit={onSubmit} />;
-	};
+	}
 
 	const {stdin, lastFrame} = render(<StatefulTextInput />);
 
@@ -158,20 +165,17 @@ test('onSubmit', async t => {
 });
 
 test('paste and move cursor', async t => {
-	const StatefulTextInput = () => {
+	function StatefulTextInput() {
 		const [value, setValue] = useState('');
 
 		return <TextInput highlightPastedText value={value} onChange={setValue} />;
-	};
+	}
 
 	const {stdin, lastFrame} = render(<StatefulTextInput />);
 
 	// Need this to invert each char separately
-	const inverse = string => {
-		return string
-			.split('')
-			.map(c => chalk.inverse(c))
-			.join('');
+	const inverse = (s: string) => {
+		return [...s].map(c => chalk.inverse(c)).join('');
 	};
 
 	await delay(100);
@@ -195,11 +199,11 @@ test('paste and move cursor', async t => {
 });
 
 test('delete at the beginning of text', async t => {
-	const Test = () => {
+	function Test() {
 		const [value, setValue] = useState('');
 
 		return <TextInput value={value} onChange={setValue} />;
-	};
+	}
 
 	const {stdin, lastFrame} = render(<Test />);
 
@@ -226,12 +230,14 @@ test('delete at the beginning of text', async t => {
 });
 
 test('adjust cursor when text is shorter than last value', async t => {
-	const Test = () => {
+	function Test() {
 		const [value, setValue] = useState('');
-		const submit = () => setValue('');
+		const submit = () => {
+			setValue('');
+		};
 
 		return <TextInput value={value} onChange={setValue} onSubmit={submit} />;
-	};
+	}
 
 	const {stdin, lastFrame} = render(<Test />);
 
