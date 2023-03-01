@@ -10,21 +10,16 @@ const noop = () => {
 	/* */
 };
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const CURSOR = chalk.inverse(' ');
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const ENTER = '\r';
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const ARROW_LEFT = '\u001B[D';
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const ARROW_RIGHT = '\u001B[C';
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const DELETE = '\u007F';
+const cursor = chalk.inverse(' ');
+const enter = '\r';
+const arrowLeft = '\u001B[D';
+const arrowRight = '\u001B[C';
+const del = '\u007F';
 
 test('default state', t => {
 	const {lastFrame} = render(<TextInput value="" onChange={noop} />);
 
-	t.is(lastFrame(), CURSOR);
+	t.is(lastFrame(), cursor);
 });
 
 test('display value', t => {
@@ -38,7 +33,7 @@ test('display value', t => {
 test('display value with cursor', t => {
 	const {lastFrame} = render(<TextInput value="Hello" onChange={noop} />);
 
-	t.is(lastFrame(), `Hello${CURSOR}`);
+	t.is(lastFrame(), `Hello${cursor}`);
 });
 
 test('display placeholder', t => {
@@ -79,31 +74,31 @@ test('accept input (controlled)', async t => {
 
 	const {stdin, lastFrame} = render(<StatefulTextInput />);
 
-	t.is(lastFrame(), CURSOR);
+	t.is(lastFrame(), cursor);
 	await delay(100);
 	stdin.write('X');
 	await delay(100);
-	t.is(lastFrame(), `X${CURSOR}`);
+	t.is(lastFrame(), `X${cursor}`);
 });
 
 test('accept input (uncontrolled)', async t => {
 	const {stdin, lastFrame} = render(<UncontrolledTextInput />);
 
-	t.is(lastFrame(), CURSOR);
+	t.is(lastFrame(), cursor);
 	await delay(100);
 	stdin.write('X');
 	await delay(100);
-	t.is(lastFrame(), `X${CURSOR}`);
+	t.is(lastFrame(), `X${cursor}`);
 });
 
 test('initial value (uncontrolled)', async t => {
 	const {stdin, lastFrame} = render(<UncontrolledTextInput initialValue="Y" />);
 
-	t.is(lastFrame(), `Y${CURSOR}`);
+	t.is(lastFrame(), `Y${cursor}`);
 	await delay(100);
 	stdin.write('X');
 	await delay(100);
-	t.is(lastFrame(), `YX${CURSOR}`);
+	t.is(lastFrame(), `YX${cursor}`);
 });
 
 test('ignore input when not in focus', async t => {
@@ -134,10 +129,10 @@ test('ignore input for Tab and Shift+Tab keys', async t => {
 	await delay(100);
 	stdin.write('\t');
 	await delay(100);
-	t.is(lastFrame(), CURSOR);
+	t.is(lastFrame(), cursor);
 	stdin.write('\u001B[Z');
 	await delay(100);
-	t.is(lastFrame(), CURSOR);
+	t.is(lastFrame(), cursor);
 });
 
 test('onSubmit', async t => {
@@ -151,15 +146,15 @@ test('onSubmit', async t => {
 
 	const {stdin, lastFrame} = render(<StatefulTextInput />);
 
-	t.is(lastFrame(), CURSOR);
+	t.is(lastFrame(), cursor);
 
 	await delay(100);
 	stdin.write('X');
 	await delay(100);
-	stdin.write(ENTER);
+	stdin.write(enter);
 	await delay(100);
 
-	t.is(lastFrame(), `X${CURSOR}`);
+	t.is(lastFrame(), `X${cursor}`);
 	t.true(onSubmit.calledWith('X'));
 	t.true(onSubmit.calledOnce);
 });
@@ -183,9 +178,9 @@ test('paste and move cursor', async t => {
 	await delay(100);
 	stdin.write('B');
 	await delay(100);
-	t.is(lastFrame(), `AB${CURSOR}`);
+	t.is(lastFrame(), `AB${cursor}`);
 
-	stdin.write(ARROW_LEFT);
+	stdin.write(arrowLeft);
 	await delay(100);
 	t.is(lastFrame(), `A${chalk.inverse('B')}`);
 
@@ -193,9 +188,9 @@ test('paste and move cursor', async t => {
 	await delay(100);
 	t.is(lastFrame(), `A${inverse('Hello WorldB')}`);
 
-	stdin.write(ARROW_RIGHT);
+	stdin.write(arrowRight);
 	await delay(100);
-	t.is(lastFrame(), `AHello WorldB${CURSOR}`);
+	t.is(lastFrame(), `AHello WorldB${cursor}`);
 });
 
 test('delete at the beginning of text', async t => {
@@ -215,15 +210,15 @@ test('delete at the beginning of text', async t => {
 	stdin.write('s');
 	await delay(100);
 	stdin.write('t');
-	stdin.write(ARROW_LEFT);
+	stdin.write(arrowLeft);
 	await delay(100);
-	stdin.write(ARROW_LEFT);
+	stdin.write(arrowLeft);
 	await delay(100);
-	stdin.write(ARROW_LEFT);
+	stdin.write(arrowLeft);
 	await delay(100);
-	stdin.write(ARROW_LEFT);
+	stdin.write(arrowLeft);
 	await delay(100);
-	stdin.write(DELETE);
+	stdin.write(del);
 	await delay(100);
 
 	t.is(lastFrame(), `${chalk.inverse('T')}est`);
