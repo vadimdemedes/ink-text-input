@@ -3,7 +3,7 @@ import {Text, useInput} from 'ink';
 import chalk from 'chalk';
 import type {Except} from 'type-fest';
 
-type Props = {
+export type Props = {
 	/**
 	 * Text to display when `value` is empty.
 	 */
