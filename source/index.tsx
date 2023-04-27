@@ -198,6 +198,7 @@ function TextInput({
 }
 
 export default TextInput;
+export {TextInput};
 
 type UncontrolledProps = {
 	/**
