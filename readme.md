@@ -2,12 +2,10 @@
 
 > Text input component for [Ink](https://github.com/vadimdemedes/ink).
 
-Looking for a version compatible with Ink 2.x? Check out [this release](https://github.com/vadimdemedes/ink-text-input/tree/v3.3.0).
-
 ## Install
 
-```
-$ npm install ink-text-input
+```sh
+npm install ink-text-input
 ```
 
 ## Usage

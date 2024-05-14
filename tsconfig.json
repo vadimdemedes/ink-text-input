@@ -2,11 +2,8 @@
 	"extends": "@sindresorhus/tsconfig",
 	"compilerOptions": {
 		"outDir": "build",
-		"sourceMap": true
+		"sourceMap": true,
+		"jsx": "react"
 	},
-	"include": ["source"],
-	"ts-node": {
-		"transpileOnly": true,
-		"files": true
-	}
+	"include": ["source"]
 }
