@@ -24,7 +24,7 @@ test('default state', t => {
 
 test('display value', t => {
 	const {lastFrame} = render(
-		<TextInput value="Hello" showCursor={false} onChange={noop} />
+		<TextInput value="Hello" showCursor={false} onChange={noop} />,
 	);
 
 	t.is(lastFrame(), 'Hello');
@@ -38,7 +38,7 @@ test('display value with cursor', t => {
 
 test('display placeholder', t => {
 	const {lastFrame} = render(
-		<TextInput value="" placeholder="Placeholder" onChange={noop} />
+		<TextInput value="" placeholder="Placeholder" onChange={noop} />,
 	);
 
 	t.is(lastFrame(), chalk.inverse('P') + chalk.grey('laceholder'));
@@ -51,7 +51,7 @@ test('display placeholder when cursor is hidden', t => {
 			placeholder="Placeholder"
 			showCursor={false}
 			onChange={noop}
-		/>
+		/>,
 	);
 
 	t.is(lastFrame(), chalk.grey('Placeholder'));
@@ -59,7 +59,7 @@ test('display placeholder when cursor is hidden', t => {
 
 test('display value with mask', t => {
 	const {lastFrame} = render(
-		<TextInput value="Hello" mask="*" onChange={noop} />
+		<TextInput value="Hello" mask="*" onChange={noop} />,
 	);
 
 	t.is(lastFrame(), `*****${chalk.inverse(' ')}`);
@@ -168,11 +168,6 @@ test('paste and move cursor', async t => {
 
 	const {stdin, lastFrame} = render(<StatefulTextInput />);
 
-	// Need this to invert each char separately
-	const inverse = (s: string) => {
-		return [...s].map(c => chalk.inverse(c)).join('');
-	};
-
 	await delay(100);
 	stdin.write('A');
 	await delay(100);
@@ -186,7 +181,7 @@ test('paste and move cursor', async t => {
 
 	stdin.write('Hello World');
 	await delay(100);
-	t.is(lastFrame(), `A${inverse('Hello WorldB')}`);
+	t.is(lastFrame(), `A${chalk.inverse('Hello WorldB')}`);
 
 	stdin.write(arrowRight);
 	await delay(100);

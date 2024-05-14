@@ -7,43 +7,43 @@ export type Props = {
 	/**
 	 * Text to display when `value` is empty.
 	 */
-	placeholder?: string;
+	readonly placeholder?: string;
 
 	/**
 	 * Listen to user's input. Useful in case there are multiple input components
 	 * at the same time and input must be "routed" to a specific component.
 	 */
-	focus?: boolean; // eslint-disable-line react/boolean-prop-naming
+	readonly focus?: boolean; // eslint-disable-line react/boolean-prop-naming
 
 	/**
 	 * Replace all chars and mask the value. Useful for password inputs.
 	 */
-	mask?: string;
+	readonly mask?: string;
 
 	/**
 	 * Whether to show cursor and allow navigation inside text input with arrow keys.
 	 */
-	showCursor?: boolean; // eslint-disable-line react/boolean-prop-naming
+	readonly showCursor?: boolean; // eslint-disable-line react/boolean-prop-naming
 
 	/**
 	 * Highlight pasted text
 	 */
-	highlightPastedText?: boolean; // eslint-disable-line react/boolean-prop-naming
+	readonly highlightPastedText?: boolean; // eslint-disable-line react/boolean-prop-naming
 
 	/**
 	 * Value to display in a text input.
 	 */
-	value: string;
+	readonly value: string;
 
 	/**
 	 * Function to call when value updates.
 	 */
-	onChange: (value: string) => void;
+	readonly onChange: (value: string) => void;
 
 	/**
 	 * Function to call when `Enter` is pressed, where first argument is a value of the input.
 	 */
-	onSubmit?: (value: string) => void;
+	readonly onSubmit?: (value: string) => void;
 };
 
 function TextInput({
@@ -54,11 +54,11 @@ function TextInput({
 	highlightPastedText = false,
 	showCursor = true,
 	onChange,
-	onSubmit
+	onSubmit,
 }: Props) {
 	const [state, setState] = useState({
 		cursorOffset: (originalValue || '').length,
-		cursorWidth: 0
+		cursorWidth: 0,
 	});
 
 	const {cursorOffset, cursorWidth} = state;
@@ -74,7 +74,7 @@ function TextInput({
 			if (previousState.cursorOffset > newValue.length - 1) {
 				return {
 					cursorOffset: newValue.length,
-					cursorWidth: 0
+					cursorWidth: 0,
 				};
 			}
 
@@ -176,14 +176,14 @@ function TextInput({
 
 			setState({
 				cursorOffset: nextCursorOffset,
-				cursorWidth: nextCursorWidth
+				cursorWidth: nextCursorWidth,
 			});
 
 			if (nextValue !== originalValue) {
 				onChange(nextValue);
 			}
 		},
-		{isActive: focus}
+		{isActive: focus},
 	);
 
 	return (
@@ -203,7 +203,7 @@ type UncontrolledProps = {
 	/**
 	 * Initial value.
 	 */
-	initialValue?: string;
+	readonly initialValue?: string;
 } & Except<Props, 'value' | 'onChange'>;
 
 export function UncontrolledTextInput({
