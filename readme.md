@@ -92,6 +92,12 @@ Type: `Function`
 
 Function to call when `Enter` is pressed, where first argument is a value of the input.
 
+### ignoreFilter
+
+Type: `Function`
+
+Whether the input listener should not fire if the specified function returns `true`.
+
 ## Uncontrolled usage
 
 This component also exposes an [uncontrolled](https://reactjs.org/docs/uncontrolled-components.html) version, which handles `value` changes for you. To receive the final input value, use `onSubmit` prop.
