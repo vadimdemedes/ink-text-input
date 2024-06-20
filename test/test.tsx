@@ -247,3 +247,47 @@ test('adjust cursor when text is shorter than last value', async t => {
 	await delay(100);
 	t.is(lastFrame(), `AB${chalk.inverse(' ')}`);
 });
+
+test('do not accept input if ignoreFilter returns true', async t => {
+	function StatefulTextInput() {
+		const [value, setValue] = useState('');
+
+		return (
+			<TextInput
+				ignoreFilter={input => input === 'q'}
+				value={value}
+				onChange={setValue}
+			/>
+		);
+	}
+
+	const {stdin, lastFrame} = render(<StatefulTextInput />);
+
+	t.is(lastFrame(), cursor);
+	await delay(100);
+	stdin.write('X');
+	await delay(100);
+	stdin.write('q');
+	await delay(100);
+	t.is(lastFrame(), `X${cursor}`);
+});
+
+test('do accept input if ignoreFilter returns false', async t => {
+	function StatefulTextInput() {
+		const [value, setValue] = useState('');
+
+		return (
+			<TextInput ignoreFilter={() => false} value={value} onChange={setValue} />
+		);
+	}
+
+	const {stdin, lastFrame} = render(<StatefulTextInput />);
+
+	t.is(lastFrame(), cursor);
+	await delay(100);
+	stdin.write('X');
+	await delay(100);
+	stdin.write('q');
+	await delay(100);
+	t.is(lastFrame(), `Xq${cursor}`);
+});

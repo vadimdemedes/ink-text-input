@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Text, useInput} from 'ink';
+import {Text, useInput, type Key} from 'ink';
 import chalk from 'chalk';
 import type {Except} from 'type-fest';
 
@@ -44,6 +44,11 @@ export type Props = {
 	 * Function to call when `Enter` is pressed, where first argument is a value of the input.
 	 */
 	readonly onSubmit?: (value: string) => void;
+
+	/**
+	 * Whether the input listener should not fire if the specified function returns `true`.
+	 */
+	readonly ignoreFilter?: (input: string, key: Key) => boolean;
 };
 
 function TextInput({
@@ -55,6 +60,7 @@ function TextInput({
 	showCursor = true,
 	onChange,
 	onSubmit,
+	ignoreFilter = () => false,
 }: Props) {
 	const [state, setState] = useState({
 		cursorOffset: (originalValue || '').length,
@@ -116,6 +122,7 @@ function TextInput({
 	useInput(
 		(input, key) => {
 			if (
+				ignoreFilter(input, key) ||
 				key.upArrow ||
 				key.downArrow ||
 				(key.ctrl && input === 'c') ||
