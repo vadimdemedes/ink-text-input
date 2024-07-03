@@ -44,6 +44,16 @@ export type Props = {
 	 * Function to call when `Enter` is pressed, where first argument is a value of the input.
 	 */
 	readonly onSubmit?: (value: string) => void;
+
+	/**
+	 * Function to call when `Up` is pressed.
+	 */
+	readonly onUp?: (value: string) => void;
+
+	/**
+	 * Function to call when `Down` is pressed.
+	 */
+	readonly onDown?: (value: string) => void;
 };
 
 function TextInput({
@@ -55,6 +65,8 @@ function TextInput({
 	showCursor = true,
 	onChange,
 	onSubmit,
+	onUp,
+	onDown
 }: Props) {
 	const [state, setState] = useState({
 		cursorOffset: (originalValue || '').length,
@@ -116,8 +128,6 @@ function TextInput({
 	useInput(
 		(input, key) => {
 			if (
-				key.upArrow ||
-				key.downArrow ||
 				(key.ctrl && input === 'c') ||
 				key.tab ||
 				(key.shift && key.tab)
@@ -132,6 +142,20 @@ function TextInput({
 
 				return;
 			}
+
+			if (key.upArrow){
+				if (onUp) {
+					onUp(originalValue)
+				}
+				return
+                        }
+
+                       if (key.downArrow){
+				if (onDown){
+            				onDown(originalValue)
+				}
+				return
+        		   }
 
 			let nextCursorOffset = cursorOffset;
 			let nextValue = originalValue;

@@ -92,6 +92,19 @@ Type: `Function`
 
 Function to call when `Enter` is pressed, where first argument is a value of the input.
 
+### onUp
+
+Type: `Function`
+
+Function to call when `Up` is pressed, where first argument is a value of the input.
+
+### onDown
+
+Type: `Function`
+
+Function to call when `Down` is pressed, where first argument is a value of the input.
+
+
 ## Uncontrolled usage
 
 This component also exposes an [uncontrolled](https://reactjs.org/docs/uncontrolled-components.html) version, which handles `value` changes for you. To receive the final input value, use `onSubmit` prop.
