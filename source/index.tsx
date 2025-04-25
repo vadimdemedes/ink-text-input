@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Text, useInput} from 'ink';
-import chalk from 'chalk';
+import pc from 'picocolors';
 import type {Except} from 'type-fest';
 
 export type Props = {
@@ -86,30 +86,30 @@ function TextInput({
 
 	const value = mask ? mask.repeat(originalValue.length) : originalValue;
 	let renderedValue = value;
-	let renderedPlaceholder = placeholder ? chalk.grey(placeholder) : undefined;
+	let renderedPlaceholder = placeholder ? pc.grey(placeholder) : undefined;
 
 	// Fake mouse cursor, because it's too inconvenient to deal with actual cursor and ansi escapes
 	if (showCursor && focus) {
 		renderedPlaceholder =
 			placeholder.length > 0
-				? chalk.inverse(placeholder[0]) + chalk.grey(placeholder.slice(1))
-				: chalk.inverse(' ');
+				? pc.inverse(placeholder[0]) + pc.grey(placeholder.slice(1))
+				: pc.inverse(' ');
 
-		renderedValue = value.length > 0 ? '' : chalk.inverse(' ');
+		renderedValue = value.length > 0 ? '' : pc.inverse(' ');
 
 		let i = 0;
 
 		for (const char of value) {
 			renderedValue +=
 				i >= cursorOffset - cursorActualWidth && i <= cursorOffset
-					? chalk.inverse(char)
+					? pc.inverse(char)
 					: char;
 
 			i++;
 		}
 
 		if (value.length > 0 && cursorOffset === value.length) {
-			renderedValue += chalk.inverse(' ');
+			renderedValue += pc.inverse(' ');
 		}
 	}
 
