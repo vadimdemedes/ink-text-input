@@ -247,3 +247,66 @@ test('adjust cursor when text is shorter than last value', async t => {
 	await delay(100);
 	t.is(lastFrame(), `AB${chalk.inverse(' ')}`);
 });
+
+test('custom shouldIgnoreKey function', async t => {
+	function Test() {
+		const [value, setValue] = useState('');
+		const shouldIgnoreKey = (input: string) => input === 'x';
+
+		return (
+			<TextInput
+				value={value}
+				shouldIgnoreKey={shouldIgnoreKey}
+				onChange={setValue}
+			/>
+		);
+	}
+
+	const {stdin, lastFrame} = render(<Test />);
+
+	t.is(lastFrame(), cursor);
+	await delay(100);
+	stdin.write('x');
+	await delay(100);
+	t.is(lastFrame(), cursor);
+	stdin.write('A');
+	await delay(100);
+	t.is(lastFrame(), `A${cursor}`);
+	stdin.write('x');
+	await delay(100);
+	t.is(lastFrame(), `A${cursor}`);
+	stdin.write('B');
+	await delay(100);
+	t.is(lastFrame(), `AB${cursor}`);
+});
+
+test('shouldIgnoreKey ignores ctrl-x', async t => {
+	function Test() {
+		const [value, setValue] = useState('');
+		const shouldIgnoreKey = (input: string, key: {ctrl?: boolean}) =>
+			Boolean(key.ctrl && input === 'x');
+
+		return (
+			<TextInput
+				value={value}
+				shouldIgnoreKey={shouldIgnoreKey}
+				onChange={setValue}
+			/>
+		);
+	}
+
+	const {stdin, lastFrame} = render(<Test />);
+
+	t.is(lastFrame(), cursor);
+	await delay(100);
+	stdin.write('A');
+	await delay(100);
+	t.is(lastFrame(), `A${cursor}`);
+	// Simulate ctrl-x
+	stdin.write('\u0018'); // Ctrl-x ASCII code
+	await delay(100);
+	t.is(lastFrame(), `A${cursor}`);
+	stdin.write('B');
+	await delay(100);
+	t.is(lastFrame(), `AB${cursor}`);
+});

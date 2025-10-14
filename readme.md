@@ -92,6 +92,21 @@ Type: `Function`
 
 Function to call when `Enter` is pressed, where first argument is a value of the input.
 
+### shouldIgnoreKey
+
+Type: `(input: string, key: Key) => boolean`
+
+Function to call to determine whether a key should be ignored. Return `true` to ignore the key, `false` to process it. This is called after the built-in ignored keys (up/down arrows, ctrl+c, tab).
+
+```jsx
+// Ignore ctrl+b
+<TextInput
+	value={value}
+	shouldIgnoreKey={(input, key) => key.ctrl && input === 'b'}
+	onChange={setValue}
+/>
+```
+
 ## Uncontrolled usage
 
 This component also exposes an [uncontrolled](https://reactjs.org/docs/uncontrolled-components.html) version, which handles `value` changes for you. To receive the final input value, use `onSubmit` prop.

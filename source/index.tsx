@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Text, useInput} from 'ink';
+import {Text, useInput, type Key} from 'ink';
 import chalk from 'chalk';
 import type {Except} from 'type-fest';
 
@@ -44,6 +44,12 @@ export type Props = {
 	 * Function to call when `Enter` is pressed, where first argument is a value of the input.
 	 */
 	readonly onSubmit?: (value: string) => void;
+
+	/**
+	 * Function to call to determine whether a key should be ignored.
+	 * Return `true` to ignore the key, `false` to process it.
+	 */
+	readonly shouldIgnoreKey?: (input: string, key: Key) => boolean;
 };
 
 function TextInput({
@@ -55,6 +61,7 @@ function TextInput({
 	showCursor = true,
 	onChange,
 	onSubmit,
+	shouldIgnoreKey,
 }: Props) {
 	const [state, setState] = useState({
 		cursorOffset: (originalValue || '').length,
@@ -122,6 +129,10 @@ function TextInput({
 				key.tab ||
 				(key.shift && key.tab)
 			) {
+				return;
+			}
+
+			if (shouldIgnoreKey?.(input, key)) {
 				return;
 			}
 
