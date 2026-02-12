@@ -40,6 +40,7 @@
 	],
 	"dependencies": {
 		"chalk": "^5.3.0",
+		"string-width": "^7.0.0",
 		"type-fest": "^4.18.2"
 	},
 	"devDependencies": {
@@ -62,7 +63,7 @@
 		"xo": "^0.58.0"
 	},
 	"peerDependencies": {
-		"ink": ">=5",
+		"ink": ">=6.7.0",
 		"react": ">=18"
 	},
 	"ava": {
