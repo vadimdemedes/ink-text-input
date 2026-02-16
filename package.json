@@ -40,6 +40,7 @@
 	],
 	"dependencies": {
 		"chalk": "^5.3.0",
+		"string-width": "^7.0.0",
 		"type-fest": "^4.18.2"
 	},
 	"devDependencies": {
@@ -52,7 +53,7 @@
 		"eslint-config-xo-react": "^0.27.0",
 		"eslint-plugin-react": "^7.34.1",
 		"eslint-plugin-react-hooks": "^4.6.2",
-		"ink": "^5.0.0",
+		"ink": "^6.7.0",
 		"ink-testing-library": "vadimdemedes/ink-testing-library#f44b077e9a05a1d615bab41c72906726d34ea085",
 		"prettier": "^3.2.5",
 		"react": "^18.3.1",
@@ -62,7 +63,7 @@
 		"xo": "^0.58.0"
 	},
 	"peerDependencies": {
-		"ink": ">=5",
+		"ink": ">=6.7.0",
 		"react": ">=18"
 	},
 	"ava": {
