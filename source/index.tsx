@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {Text, useInput} from 'ink';
+import {Text, useInput, useCursor} from 'ink';
 import chalk from 'chalk';
+import stringWidth from 'string-width';
 import type {Except} from 'type-fest';
 
 export type Props = {
@@ -44,6 +45,14 @@ export type Props = {
 	 * Function to call when `Enter` is pressed, where first argument is a value of the input.
 	 */
 	readonly onSubmit?: (value: string) => void;
+
+	/**
+	 * Row offset of this component within ink's output.
+	 * When set, the real terminal cursor is placed at the text input's
+	 * cursor position, enabling IME (Input Method Editor) preedit overlays
+	 * for Korean, Japanese, Chinese and other complex input methods.
+	 */
+	readonly cursorRow?: number;
 };
 
 function TextInput({
@@ -55,6 +64,7 @@ function TextInput({
 	showCursor = true,
 	onChange,
 	onSubmit,
+	cursorRow,
 }: Props) {
 	const [state, setState] = useState({
 		cursorOffset: (originalValue || '').length,
@@ -62,6 +72,7 @@ function TextInput({
 	});
 
 	const {cursorOffset, cursorWidth} = state;
+	const {setCursorPosition} = useCursor();
 
 	useEffect(() => {
 		setState(previousState => {
@@ -85,6 +96,17 @@ function TextInput({
 	const cursorActualWidth = highlightPastedText ? cursorWidth : 0;
 
 	const value = mask ? mask.repeat(originalValue.length) : originalValue;
+
+	// Position real terminal cursor for IME preedit overlay support
+	if (showCursor && focus && cursorRow !== undefined) {
+		setCursorPosition({
+			x: stringWidth(value.slice(0, cursorOffset)),
+			y: cursorRow,
+		});
+	} else {
+		setCursorPosition(undefined);
+	}
+
 	let renderedValue = value;
 	let renderedPlaceholder = placeholder ? chalk.grey(placeholder) : undefined;
 
