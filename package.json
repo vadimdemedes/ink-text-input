@@ -1,9 +1,12 @@
 {
-	"name": "ink-text-input",
-	"version": "6.0.0",
+	"name": "@nexus10x/ink-text-input",
+	"version": "6.0.1",
 	"description": "Text input component for Ink",
 	"license": "MIT",
-	"repository": "vadimdemedes/ink-text-input",
+	"repository": "nexus10x/ink-text-input",
+	"publishConfig": {
+		"registry": "https://npm.pkg.github.com"
+	},
 	"author": {
 		"name": "Vadim Demedes",
 		"email": "vadimdemedes@hey.com",

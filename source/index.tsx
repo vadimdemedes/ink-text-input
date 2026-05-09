@@ -166,12 +166,12 @@ function TextInput({
 				}
 			}
 
-			if (cursorOffset < 0) {
+			if (nextCursorOffset < 0) {
 				nextCursorOffset = 0;
 			}
 
-			if (cursorOffset > originalValue.length) {
-				nextCursorOffset = originalValue.length;
+			if (nextCursorOffset > nextValue.length) {
+				nextCursorOffset = nextValue.length;
 			}
 
 			setState({
